@@ -3,43 +3,10 @@ import { DELAY_IN_MS } from "../../constants/delays";
 import React from "react";
 import {
   constructElement,
-  delay,
   setChangingState,
   setModifiedState,
   swap
 } from "../../shared/utils";
-
-const animatedReverse = async (
-  elements: TElement[],
-  setElementsAsync: (elements: TElement[]) => Promise<void>,
-  leftIndex = 0,
-  rightIndex = elements.length - 1
-) => {
-  if (leftIndex > rightIndex) return;
-  if (leftIndex === rightIndex) {
-    const element = elements[leftIndex];
-
-    setChangingState(element);
-    await setElementsAsync(elements);
-
-    setModifiedState(element);
-    await setElementsAsync(elements);
-    return;
-  }
-  const leftElement = elements[leftIndex];
-  const rightElement = elements[rightIndex];
-
-  setChangingState(leftElement, rightElement);
-  await setElementsAsync(elements);
-
-  swap(elements, leftIndex, rightIndex);
-  await setElementsAsync(elements);
-
-  setModifiedState(leftElement, rightElement);
-  await setElementsAsync(elements);
-
-  await animatedReverse(elements, setElementsAsync, leftIndex + 1, rightIndex - 1);
-};
 
 const TOGGLE_LOADER = "TOGGLE_LOADER";
 const SET_ELEMENTS = "SET_ELEMENTS";
@@ -77,14 +44,37 @@ export const reducer = ((state: TState, action: ReducerAction) => {
 
 export const initialState: TState = { elements: [], isLoader: false };
 
-export const reverse = (str: string) => (dispatch: React.Dispatch<ReducerAction>) => {
-  const update = async (elements: TElement[]) => {
-    await delay(DELAY_IN_MS);
-    setElements(elements)(dispatch);
-  };
-  const onFinally = (): void => toggleLoader()(dispatch);
-  const elements = str.split("").map(constructElement);
-  toggleLoader()(dispatch);
-  setElements(elements)(dispatch);
-  animatedReverse(elements, update).finally(onFinally);
+export const reversingGenerator = function* (elements: TElement[]) {
+  let leftIndex = 0;
+  let rightIndex = elements.length - 1;
+  while (leftIndex <= rightIndex) {
+    const leftElement = elements[leftIndex];
+    const rightElement = elements[rightIndex];
+    setChangingState(leftElement, rightElement);
+    yield elements;
+    if (leftIndex !== rightIndex) {
+      swap(elements, leftIndex, rightIndex);
+      yield elements;
+    }
+    setModifiedState(leftElement, rightElement);
+    yield elements;
+    leftIndex++;
+    rightIndex--;
+  }
+  return elements;
 };
+
+export const reverse = (str: string) => (dispatch: React.Dispatch<ReducerAction>) => {
+    const elements = str.split("").map(constructElement);
+    const generator = reversingGenerator(elements);
+    toggleLoader()(dispatch);
+    setElements(elements)(dispatch);
+    const ticker = setInterval(() => {
+      const { value: elements, done } = generator.next();
+      setElements(elements)(dispatch);
+      if (done) {
+        toggleLoader()(dispatch);
+        clearInterval(ticker);
+      }
+    }, DELAY_IN_MS);
+  }

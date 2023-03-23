@@ -1,0 +1,14 @@
+.container {
+  width: 567px;
+  margin: auto;
+}
+
+.row {
+  display: flex;
+}
+
+.elements {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

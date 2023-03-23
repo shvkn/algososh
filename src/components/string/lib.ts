@@ -65,16 +65,16 @@ export const reversingGenerator = function* (elements: TElement[]) {
 };
 
 export const reverse = (str: string) => (dispatch: React.Dispatch<ReducerAction>) => {
-    const elements = str.split("").map(constructElement);
-    const generator = reversingGenerator(elements);
-    toggleLoader()(dispatch);
+  const elements = str.split("").map(constructElement);
+  const generator = reversingGenerator(elements);
+  toggleLoader()(dispatch);
+  setElements(elements)(dispatch);
+  const ticker = setInterval(() => {
+    const { value: elements, done } = generator.next();
     setElements(elements)(dispatch);
-    const ticker = setInterval(() => {
-      const { value: elements, done } = generator.next();
-      setElements(elements)(dispatch);
-      if (done) {
-        toggleLoader()(dispatch);
-        clearInterval(ticker);
-      }
-    }, DELAY_IN_MS);
-  }
+    if (done) {
+      toggleLoader()(dispatch);
+      clearInterval(ticker);
+    }
+  }, DELAY_IN_MS);
+};

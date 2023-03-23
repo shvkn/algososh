@@ -9,6 +9,11 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
+  "plugins": [
+    "react-hooks",
+    "@typescript-eslint",
+    "prettier"
+  ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -18,12 +23,6 @@ module.exports = {
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": [
-    "react",
-    "react-hooks",
-    "@typescript-eslint",
-    "prettier"
-  ],
   "rules": {
     "react/react-in-jsx-scope": "off",
     "camelcase": "error",

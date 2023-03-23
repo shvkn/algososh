@@ -1,0 +1,6 @@
+{
+  "bracketSpacing": true,
+  "printWidth": 85,
+  "trailingComma": "all",
+  "semi": true
+}

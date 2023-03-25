@@ -1,0 +1,23 @@
+.panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 924px;
+  margin: 0 auto 48px;
+}
+
+.group {
+  display: flex;
+  border: none;
+}
+
+.array {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  margin-top: auto;
+  height: 348px;
+}
+
+.row {
+}

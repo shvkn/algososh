@@ -31,6 +31,22 @@ module.exports = {
       "error",
       "double"
     ],
-    "no-duplicate-imports": "error"
+    "no-duplicate-imports": "error",
+    "max-len": [
+      "error",
+      {
+        code: 100,
+        ignoreUrls: true,
+      },
+    ],
+    "no-confusing-arrow": [
+      "error",
+      {
+        allowParens: false,
+      },
+    ],
+    'no-unexpected-multiline': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+    'react-hooks/rules-of-hooks': 'error',
   }
 }

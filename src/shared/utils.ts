@@ -9,6 +9,9 @@ export const constructElement = (letter: string) => ({
 const setState = (element: TElement, state: ElementStates): void => {
   element.state = state;
 };
+export const setDefaultState = (...elements: TElement[]): void => {
+  elements.forEach((el) => setState(el, ElementStates.Default));
+};
 export const setChangingState = (...elements: TElement[]): void => {
   elements.forEach((el) => setState(el, ElementStates.Changing));
 };

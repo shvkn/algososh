@@ -1,12 +1,7 @@
 import { TElement } from "../../types/element";
 import { DELAY_IN_MS } from "../../constants/delays";
 import React from "react";
-import {
-  constructElement,
-  setChangingState,
-  setModifiedState,
-  swap
-} from "../../shared/utils";
+import { constructElement, setChangingState, setModifiedState, swap } from "../../shared/utils";
 
 const TOGGLE_LOADER = "TOGGLE_LOADER";
 const SET_ELEMENTS = "SET_ELEMENTS";
@@ -65,7 +60,7 @@ export const reversingGenerator = function* (elements: TElement[]) {
 };
 
 export const reverse = (str: string) => (dispatch: React.Dispatch<ReducerAction>) => {
-  const elements = str.split("").map(constructElement);
+  const elements = str.split("").map((value: string) => constructElement(value));
   const generator = reversingGenerator(elements);
   toggleLoader()(dispatch);
   setElements(elements)(dispatch);

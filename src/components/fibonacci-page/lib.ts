@@ -57,8 +57,10 @@ export const reducer = ((state: TState, action: ReducerAction) => {
 
 export const initialState: TState = { elements: [], isLoader: false };
 
-const getFibonacciList = function(n: number, current = 0, next = 1, numbers: number[] = []): number[] {
-  return numbers.length === n ? numbers : getFibonacciList(n, next, current + next, [...numbers, current]);
+const getFibonacciList = (n: number, current = 0, next = 1, numbers: number[] = []): number[] => {
+  return numbers.length === n
+    ? numbers
+    : getFibonacciList(n, next, current + next, [...numbers, current]);
 };
 
 export const fibonacci = (n: number) => (dispatch: React.Dispatch<ReducerAction>) => {

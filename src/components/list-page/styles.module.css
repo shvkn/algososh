@@ -1,0 +1,28 @@
+.row {
+  display: flex;
+}
+
+.input {
+  width: 204px;
+}
+
+.panel {
+  width: 952px;
+  margin: 0 auto;
+}
+
+.button {
+  flex-grow: 1;
+}
+
+.node {
+  display: flex;
+  align-items: center;
+}
+
+.list {
+  display: flex;
+  margin: 100px auto;
+  width: 952px;
+  justify-content: center;
+}

@@ -38,7 +38,7 @@ export const MainPage: React.FC<MainPageProps> = ({ extraClass = "" }) => {
           <div className={`${styles.card} ${styles.queue}`} />
         </Link>
         <Link className={styles.link} to="/list">
-          <div className={`${styles.card} ${styles.list}`} />
+          <div className={`${styles.card} ${styles.group}`} />
         </Link>
       </div>
       <Marquee className={styles.ticker} gradient={false} speed={200}>

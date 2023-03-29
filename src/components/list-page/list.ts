@@ -12,7 +12,7 @@ export class ListNode<T> implements IListNode<T>{
     this.next = next;
   }
 }
-
+// TODO
 interface ILinkedList<T> {
   head: IListNode<T> | null;
   tail: IListNode<T> | null;
@@ -97,7 +97,7 @@ export class LinkedList<T> implements ILinkedList<T> {
   }
 
   removeAt(index: number) {
-    if (index < 0 || index > this.size) {
+    if (index < 0 || index > this.size - 1) {
       throw new Error("Index out of range");
     }
     if (index === 0) {
@@ -113,7 +113,6 @@ export class LinkedList<T> implements ILinkedList<T> {
       curr = curr.next;
       currIndex += 1;
     }
-    // console.log({ prev, curr });
     if (prev && curr) {
       prev.next = curr.next
     }
@@ -128,7 +127,6 @@ export class LinkedList<T> implements ILinkedList<T> {
     this.tail.next = node;
     this.tail = node;
     this.size += 1;
-    // console.log(this.tail);
     return node;
   }
 

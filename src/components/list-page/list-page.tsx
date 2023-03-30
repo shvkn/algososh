@@ -1,30 +1,19 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { Input } from "../ui/input/input";
-import { Button } from "../ui/button/button";
-import { useLinkedList } from "./lib";
-import { Circle } from "../ui/circle/circle";
-import { ArrowIcon } from "../ui/icons/arrow-icon";
+import { ArrowIcon, Button, Circle, Input, SolutionLayout } from "../ui";
 
+import { HEAD, TAIL } from "../../constants";
+import { ElementStates } from "../../types";
+
+import { useLinkedList } from "./lib";
 import styles from "./styles.module.css";
 
 type TForm = { value: string, index: string };
 const defaultValues: TForm = { value: "", index: "" };
 
-enum ListMethods {
-  InsertAtHead,
-  InsertAtTail,
-  RemoveFromHead,
-  RemoveFromTail,
-  InsertAt,
-  RemoveAt
-}
-
 export const ListPage: React.FC = () => {
   const list = useLinkedList();
-  const [method, setMethod] = useState<ListMethods | null>(null);
   const {
     control,
     reset: resetForm,
@@ -35,64 +24,51 @@ export const ListPage: React.FC = () => {
   const value = useWatch({ control, name: "value" });
 
   const isIndexInRange = useMemo(() => {
-    return index.length > 0 && (Number(index) > -1 && Number(index) < list.size);
+    return index.length > 0 && Number(index) >= 0 && Number(index) < list.size;
   }, [index, list.size]);
-
-  const clearMethod = () => setMethod(null);
 
   const insertAtHead = () => {
     if (value.length === 0) {
       return;
     }
-    setMethod(ListMethods.InsertAtHead);
     resetForm(defaultValues);
-    list.insertAtHead(value)
-      .then(clearMethod);
+    void list.insertAtHead(value)
   };
 
   const insertAtTail = () => {
     if (value.length === 0) {
       return;
     }
-    setMethod(ListMethods.InsertAtTail);
     resetForm(defaultValues);
-    list.insertAtTail(value)
-      .then(clearMethod);
+    void list.insertAtTail(value)
   };
 
   const removeFromHead = () => {
-    setMethod(ListMethods.RemoveFromHead);
     resetForm(defaultValues);
-    list.removeFromHead()
-      .then(clearMethod);
+    void list.removeFromHead()
   };
 
   const removeFromTail = () => {
-    setMethod(ListMethods.RemoveFromTail);
     resetForm(defaultValues);
-    list.removeFromTail()
-      .then(clearMethod);
+    void list.removeFromTail()
   };
 
   const insertAt = () => {
     if (value.length === 0 || index.length === 0 || Number.isNaN(index)) {
       return;
     }
-    setMethod(ListMethods.InsertAt);
     resetForm(defaultValues);
-    list.insertAt(Number(index), value)
-      .then(clearMethod);
+    void list.insertAt(Number(index), value)
   };
 
   const removeAt = () => {
     if (index.length === 0 || Number.isNaN(index)) {
       return;
     }
-    setMethod(ListMethods.RemoveAt);
     resetForm(defaultValues);
-    list.removeAt(Number(index))
-      .then(clearMethod);
+    void list.removeAt(Number(index))
   };
+
   return (
     <SolutionLayout title="Связный список">
       <form className={styles.panel}>
@@ -109,6 +85,7 @@ export const ListPage: React.FC = () => {
                 maxLength={4}
                 value={value}
                 placeholder={"Введите значение"}
+                disabled={list.currentAnimation !== null}
                 extraClass={styles.input}
               />
             )}
@@ -116,29 +93,29 @@ export const ListPage: React.FC = () => {
           <Button type={"button"}
                   text={"Добавить в head"}
                   onClick={insertAtHead}
-                  isLoader={method === ListMethods.InsertAtHead}
-                  disabled={list.isAnimation || !isValid}
+                  isLoader={list.currentAnimation === "InsertAtHead"}
+                  disabled={list.currentAnimation !== null || !isValid}
                   extraClass={`ml-6 ${styles.button}`} />
 
           <Button type={"button"}
                   text={"Добавить в tail"}
                   onClick={insertAtTail}
-                  isLoader={method === ListMethods.InsertAtTail}
-                  disabled={list.isAnimation || !isValid}
+                  isLoader={list.currentAnimation === "InsertAtTail"}
+                  disabled={list.currentAnimation !== null || !isValid}
                   extraClass={`ml-6 ${styles.button}`} />
 
           <Button type={"button"}
                   text={"Удалить из head"}
                   onClick={removeFromHead}
-                  isLoader={method === ListMethods.RemoveFromHead}
-                  disabled={list.isAnimation || list.isEmpty}
+                  isLoader={list.currentAnimation === "RemoveFromHead"}
+                  disabled={list.currentAnimation !== null || list.isEmpty}
                   extraClass={`ml-6 ${styles.button}`} />
 
           <Button type={"button"}
                   text={"Удалить из tail"}
                   onClick={removeFromTail}
-                  isLoader={method === ListMethods.RemoveFromTail}
-                  disabled={list.isAnimation || list.isEmpty}
+                  isLoader={list.currentAnimation === "RemoveFromTail"}
+                  disabled={list.currentAnimation !== null || list.isEmpty}
                   extraClass={`ml-6 ${styles.button}`} />
         </div>
         <div className={styles.row}>
@@ -157,7 +134,7 @@ export const ListPage: React.FC = () => {
                 onChange={onChange}
                 name={name}
                 value={value}
-                disabled={list.isAnimation || list.isEmpty}
+                disabled={list.currentAnimation !== null || list.isEmpty}
                 placeholder={"Введите индекс"}
                 extraClass={styles.input}
               />
@@ -166,39 +143,46 @@ export const ListPage: React.FC = () => {
           <Button type={"button"}
                   text={"Добавить по индексу"}
                   onClick={insertAt}
-                  isLoader={method === ListMethods.InsertAt}
-                  disabled={list.isAnimation || !isValid || !isIndexInRange}
-                  extraClass={`ml-6 ${styles.button}`} />
+                  isLoader={list.currentAnimation === "InsertAt"}
+                  disabled={list.currentAnimation !== null || !isValid || !isIndexInRange}
+                  extraClass={`ml-6 ${styles.buttonLarge}`} />
 
           <Button type={"button"}
                   text={"Удалить по индексу"}
                   onClick={removeAt}
-                  isLoader={method === ListMethods.RemoveAt}
-                  disabled={list.isAnimation || !isIndexInRange || list.isEmpty}
-                  extraClass={`ml-6 ${styles.button}`} />
+                  isLoader={list.currentAnimation === "RemoveAt"}
+                  disabled={list.currentAnimation !== null || !isIndexInRange || list.isEmpty}
+                  extraClass={`ml-6 ${styles.buttonLarge}`} />
         </div>
       </form>
       <div className={styles.list}>
-        {list.elements.map((i, idx, { length }) => {
-          const head = i.head
-            ? <Circle isSmall={true} state={i.head?.state} letter={i.head?.value} />
+        {list.elements.map((element, idx, { length }) => {
+          const head = element.head
+            ? <Circle isSmall={true} state={element.head?.state} letter={element.head?.value} />
             : idx === 0
-              ? "head"
+              ? HEAD
               : null;
-          const tail = i.tail
-            ? <Circle isSmall={true} state={i.tail?.state} letter={i.tail?.value} />
+          const tail = element.tail
+            ? <Circle isSmall={true} state={element.tail?.state} letter={element.tail?.value} />
             : idx === length - 1
-              ? "tail"
+              ? TAIL
               : null;
 
           return (
             <div key={idx} className={styles.node}>
-              <Circle letter={i.value?.toString()}
-                      state={i.state}
+              <Circle letter={element.value?.toString()}
+                      state={element.state}
                       head={head}
                       tail={tail}
                       index={idx} />
-              {(idx < length - 1) ? (<ArrowIcon />) : null}
+              {idx < list.size - 1 && (
+                <div className={styles.arrow}>
+                  <ArrowIcon
+                    fill={element.state === ElementStates.Changing
+                      ? "#d252e1"
+                      : "#0032ff"} />
+                </div>
+              )}
             </div>
           );
         })}

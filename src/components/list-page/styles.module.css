@@ -12,12 +12,20 @@
 }
 
 .button {
-  flex-grow: 1;
+  width: 175px;
+}
+
+.buttonLarge {
+  width: 362px;
 }
 
 .node {
   display: flex;
   align-items: center;
+}
+
+.arrow {
+  margin: 0 25px;
 }
 
 .list {

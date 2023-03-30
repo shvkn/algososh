@@ -1,9 +1,9 @@
-export interface IListNode<T> {
+interface IListNode<T> {
   data: T;
   next: IListNode<T> | null
 }
 
-export class ListNode<T> implements IListNode<T>{
+class ListNode<T> implements IListNode<T>{
   public data
   public next;
 
@@ -12,15 +12,18 @@ export class ListNode<T> implements IListNode<T>{
     this.next = next;
   }
 }
-// TODO
+
 interface ILinkedList<T> {
   head: IListNode<T> | null;
   tail: IListNode<T> | null;
+  size: number;
   toArray: () => T[];
   insertAtHead: (value: T) => IListNode<T>;
   insertAtTail: (value: T) => IListNode<T>;
-  insertAt: (value: T, index: number) => void;
-  size: number;
+  insertAt: (index: number, value: T) => IListNode<T>;
+  removeFromHead: () => IListNode<T> | null;
+  removeFromTail: () => IListNode<T> | null;
+  removeAt: (index: number) => IListNode<T> | null;
 }
 
 export class LinkedList<T> implements ILinkedList<T> {
@@ -52,6 +55,10 @@ export class LinkedList<T> implements ILinkedList<T> {
     return items;
   }
 
+  isEmpty() {
+    return this.size === 0;
+  }
+
   insertAtHead(value: T): ListNode<T> {
     const node = new ListNode(value);
     node.next = this.head;
@@ -61,62 +68,6 @@ export class LinkedList<T> implements ILinkedList<T> {
     }
     this.size += 1;
     return node;
-  }
-  isEmpty() {
-    return this.size === 0;
-  }
-  removeFromHead() {
-    if (this.isEmpty()) {
-      return;
-    } else if (this.head === this.tail) {
-     this.head = this.tail = null;
-    } else if (this.head) {
-      this.head = this.head.next;
-    }
-    this.size -= 1;
-  }
-
-  removeFromTail() {
-    if (this.isEmpty()) {
-      return;
-    } else if (this.head === this.tail) {
-      this.head = this.tail = null;
-    } else if (this.head) {
-      let current = this.head;
-      let prev = null;
-      while (current.next !== null) {
-        prev = current;
-        current = current.next;
-      }
-      if (prev) {
-        prev.next = null;
-        this.tail = prev;
-      }
-    }
-    this.size -= 1;
-  }
-
-  removeAt(index: number) {
-    if (index < 0 || index > this.size - 1) {
-      throw new Error("Index out of range");
-    }
-    if (index === 0) {
-      return this.removeFromHead();
-    } else if (index === this.size - 1) {
-      return this.removeFromTail();
-    }
-    let curr = this.head;
-    let prev = null;
-    let currIndex = 0;
-    while (currIndex < index && curr) {
-      prev = curr;
-      curr = curr.next;
-      currIndex += 1;
-    }
-    if (prev && curr) {
-      prev.next = curr.next
-    }
-    this.size -= 1;
   }
 
   insertAtTail(value: T): ListNode<T> {
@@ -130,9 +81,9 @@ export class LinkedList<T> implements ILinkedList<T> {
     return node;
   }
 
-  insertAt(value: T, index: number): ListNode<T> {
+  insertAt(index: number, value: T) {
     if (index < 0 || index > this.size) {
-      throw new Error("Index out of range");
+      throw new Error("Index is out of range");
     }
     const node = new ListNode(value);
     if (index === 0) {
@@ -152,5 +103,60 @@ export class LinkedList<T> implements ILinkedList<T> {
       this.size += 1;
     }
     return node;
+  }
+
+  removeFromHead() {
+    const head = this.head;
+    if (this.head === this.tail) {
+     this.head = this.tail = null;
+    } else if (this.head) {
+      this.head = this.head.next;
+    }
+    this.size -= 1;
+    return head;
+  }
+
+  removeFromTail() {
+    const tail = this.tail;
+    if (this.head === this.tail) {
+      this.head = this.tail = null;
+    } else if (this.head) {
+      let current = this.head;
+      let prev = null;
+      while (current.next !== null) {
+        prev = current;
+        current = current.next;
+      }
+      if (prev) {
+        prev.next = null;
+        this.tail = prev;
+      }
+    }
+    this.size -= 1;
+    return tail;
+  }
+
+  removeAt(index: number) {
+    if (index < 0 || index > this.size - 1) {
+      throw new Error("Index is out of range");
+    }
+    if (index === 0) {
+      return this.removeFromHead();
+    } else if (index === this.size - 1) {
+      return this.removeFromTail();
+    }
+    let curr = this.head;
+    let prev = null;
+    let currIndex = 0;
+    while (currIndex < index && curr) {
+      prev = curr;
+      curr = curr.next;
+      currIndex += 1;
+    }
+    if (prev && curr) {
+      prev.next = curr.next
+    }
+    this.size -= 1;
+    return curr;
   }
 }

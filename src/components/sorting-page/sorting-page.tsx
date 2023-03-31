@@ -1,41 +1,35 @@
-import React, { FormEvent, useEffect, useReducer } from "react";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { Column } from "../ui/column/column";
-import { RadioInput } from "../ui/radio-input/radio-input";
-import { Button } from "../ui/button/button";
-import { Direction } from "../../types/direction";
+import React, { FormEvent, useEffect } from "react";
+
+import { Button, Column, RadioInput, SolutionLayout } from "../ui";
+
+import { Direction } from "../../types";
+
+import { SortingAlgorithm, useAnimatedSorting } from "./lib";
 import styles from "./styles.module.css";
-import {
-  generateRandomArray,
-  setDirection,
-  setSortingAlgorithm,
-  sort,
-  SortingAlgorithm,
-  sortingReducer
-} from "./lib";
+import { SHORT_DELAY_IN_MS } from "../../constants";
 
 export const SortingPage: React.FC = () => {
-  const [{
+
+  const {
     elements,
-    isLoader,
-    isDone: shouldResetElementsStates,
+    direction,
     algorithm,
-    direction
-  }, dispatch] = useReducer(sortingReducer, {
-    elements: [],
-    isLoader: false,
-    isDone: false,
-    algorithm: SortingAlgorithm.SelectionSort,
-    direction: Direction.Ascending
-  });
+    isAnimation,
+    setDirection,
+    setAlgorithm,
+    sort,
+    array,
+    setArray,
+    randomArray
+  } = useAnimatedSorting(SHORT_DELAY_IN_MS);
 
   useEffect(() => {
-    generateRandomArray()(dispatch);
-  }, []);
+    randomArray(3, 17);
+  }, [randomArray]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    sort(elements, algorithm, direction, shouldResetElementsStates)(dispatch);
+    sort(array).then((sortedArray) => setArray(sortedArray));
   };
 
   return (
@@ -44,33 +38,39 @@ export const SortingPage: React.FC = () => {
         <fieldset className={styles.group}>
           <RadioInput label={"Выбор"}
                       checked={algorithm === SortingAlgorithm.SelectionSort}
-                      onChange={() => setSortingAlgorithm(SortingAlgorithm.SelectionSort)(dispatch)}
-                      disabled={isLoader} />
+                      onChange={() => setAlgorithm(SortingAlgorithm.SelectionSort)}
+                      disabled={isAnimation} />
+
           <RadioInput label={"Пузырек"}
                       checked={algorithm === SortingAlgorithm.BubbleSort}
-                      onChange={() => setSortingAlgorithm(SortingAlgorithm.BubbleSort)(dispatch)}
-                      disabled={isLoader}
+                      onChange={() => setAlgorithm(SortingAlgorithm.BubbleSort)}
+                      disabled={isAnimation}
                       extraClass={"ml-20"} />
         </fieldset>
-        <div className={styles.group}>
+        <div className={styles.buttons}>
           <Button type={"submit"}
                   sorting={Direction.Ascending}
                   text={"По возрастания"}
-                  isLoader={isLoader && direction === Direction.Ascending}
-                  disabled={isLoader}
-                  onClick={() => setDirection(Direction.Ascending)(dispatch)} />
+                  isLoader={isAnimation && direction === Direction.Ascending}
+                  disabled={isAnimation}
+                  onClick={() => setDirection(Direction.Ascending)}
+                  extraClass={`${styles.button}`} />
+
           <Button type={"submit"}
                   sorting={Direction.Descending}
                   text={"По убыванию"}
-                  isLoader={isLoader && direction === Direction.Descending}
-                  disabled={isLoader}
-                  onClick={() => setDirection(Direction.Descending)(dispatch)}
-                  extraClass={"ml-6"} />
+                  isLoader={isAnimation && direction === Direction.Descending}
+                  disabled={isAnimation}
+                  onClick={() => setDirection(Direction.Descending)}
+                  extraClass={`ml-6 ${styles.button}`} />
+
+          <Button type={"button"}
+                  text={"Новый массив"}
+                  disabled={isAnimation}
+                  onClick={() => randomArray(3, 17)}
+                  extraClass={`ml-40 ${styles.button}`} />
         </div>
-        <Button type={"button"}
-                text={"Новый массив"}
-                disabled={isLoader}
-                onClick={() => generateRandomArray()(dispatch)} />
+
       </form>
       <div className={styles.array}>
         {elements.map(({ value, state }, idx) => {

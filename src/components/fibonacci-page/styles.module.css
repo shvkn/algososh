@@ -9,6 +9,16 @@
 
 .elements {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  width: 944px;
+  margin: 48px auto 0;
+}
+
+.element {
+
+}
+.elementWrapper {
+  margin-bottom: 48px;
 }

@@ -11,13 +11,18 @@
   border: none;
 }
 
-.array {
+.buttons {
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  margin-top: auto;
-  height: 348px;
 }
 
-.row {
+.button {
+  width: 205px;
+}
+
+.array {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 348px;
+  margin-top: auto;
 }

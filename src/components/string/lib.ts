@@ -1,75 +1,49 @@
-import { TElement } from "../../types/element";
-import { DELAY_IN_MS } from "../../constants/delays";
-import React from "react";
-import { constructElement, setChangingState, setModifiedState, swap } from "../../shared/utils";
+import { useState } from "react";
 
-const TOGGLE_LOADER = "TOGGLE_LOADER";
-const SET_ELEMENTS = "SET_ELEMENTS";
+import { ElementStates, TElement } from "../../types";
 
-type TToggleLoaderAction = { type: typeof TOGGLE_LOADER }
-type TSetElementsAction = { type: typeof SET_ELEMENTS; payload: TElement[] }
+import { DELAY_IN_MS } from "../../constants";
 
-type ReducerAction =
-  | TToggleLoaderAction
-  | TSetElementsAction;
+import { constructElement, delay, swap } from "../../shared/utils";
 
-const toggleLoader = () => (dispatch: React.Dispatch<ReducerAction>) => {
-  dispatch({ type: TOGGLE_LOADER });
-};
+export const useReverse = (animationDelay: number = DELAY_IN_MS) => {
+  const [elements, setElements] = useState<TElement[]>([]);
+  const [isAnimation, setAnimation] = useState(false);
 
-const setElements = (elements: TElement[]) => (dispatch: React.Dispatch<ReducerAction>) => {
-  dispatch({ type: SET_ELEMENTS, payload: elements });
-};
+  const reverse = async (str: string) => {
+    setAnimation(true);
+    const arr = str.split("").map((value: string) => constructElement(value));
+    setElements(arr);
+    let left = 0;
+    let right = arr.length - 1;
+    await delay(animationDelay);
 
-type TState = {
-  elements: TElement[];
-  isLoader: boolean;
-};
+    while (left <= right) {
+      const leftEl = arr[left];
+      const rightEl = arr[right];
 
-export const reducer = ((state: TState, action: ReducerAction) => {
-  switch (action.type) {
-    case TOGGLE_LOADER:
-      return { ...state, isLoader: !state.isLoader };
-    case SET_ELEMENTS:
-      return { ...state, elements: action.payload };
-    default:
-      return state;
-  }
-});
+      leftEl.state = ElementStates.Changing;
+      rightEl.state = ElementStates.Changing;
+      setElements([...arr]);
 
-export const initialState: TState = { elements: [], isLoader: false };
+      await delay(animationDelay);
+      if (left !== right) {
+        swap(arr, left, right);
+      }
+      leftEl.state = ElementStates.Modified;
+      rightEl.state = ElementStates.Modified;
+      setElements([...arr]);
 
-export const reversingGenerator = function* (elements: TElement[]) {
-  let leftIndex = 0;
-  let rightIndex = elements.length - 1;
-  while (leftIndex <= rightIndex) {
-    const leftElement = elements[leftIndex];
-    const rightElement = elements[rightIndex];
-    setChangingState(leftElement, rightElement);
-    yield elements;
-    if (leftIndex !== rightIndex) {
-      swap(elements, leftIndex, rightIndex);
-      yield elements;
+      left += 1;
+      right -= 1;
     }
-    setModifiedState(leftElement, rightElement);
-    yield elements;
-    leftIndex++;
-    rightIndex--;
-  }
-  return elements;
-};
+    setAnimation(false);
+    return elements.map(({ value }) => value);
+  };
 
-export const reverse = (str: string) => (dispatch: React.Dispatch<ReducerAction>) => {
-  const elements = str.split("").map((value: string) => constructElement(value));
-  const generator = reversingGenerator(elements);
-  toggleLoader()(dispatch);
-  setElements(elements)(dispatch);
-  const ticker = setInterval(() => {
-    const { value: elements, done } = generator.next();
-    setElements(elements)(dispatch);
-    if (done) {
-      toggleLoader()(dispatch);
-      clearInterval(ticker);
-    }
-  }, DELAY_IN_MS);
+  return {
+    elements,
+    isAnimation,
+    reverse
+  };
 };

@@ -1,5 +1,6 @@
 .container {
   width: 567px;
+  height: 286px;
   margin: auto;
 }
 
@@ -8,16 +9,7 @@
 }
 
 .elements {
-  margin-bottom: 100px;
-}
-
-.elementsRow {
   display: flex;
   justify-content: center;
-  height: 110px;
-  margin-top: 48px;
-}
-
-.elementWrapper {
-  height: 110px;
+  margin-top: 120px;
 }

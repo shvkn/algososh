@@ -1,11 +1,10 @@
-import React, { useReducer } from "react";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
+import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Input } from "../ui/input/input";
-import { Button } from "../ui/button/button";
-import { Circle } from "../ui/circle/circle";
+
+import { Button, Circle, Input, SolutionLayout } from "../ui";
+
+import { useReverse } from "./lib";
 import styles from "./style.module.css";
-import { reducer, initialState, reverse } from "./lib";
 
 type TStringForm = { str: string };
 const defaultValues: TStringForm = { str: "" };
@@ -17,20 +16,18 @@ export const StringComponent: React.FC = () => {
     reset: resetForm,
     formState: { isValid, isDirty }
   } = useForm({ defaultValues });
-  const [{
-    elements,
-    isLoader
-  }, dispatch] = useReducer(reducer, initialState);
+
+  const { elements, reverse, isAnimation } = useReverse();
 
   const onSubmit = (data: TStringForm) => {
     resetForm();
-    reverse(data.str)(dispatch);
+    void reverse(data.str);
   };
 
   return (
     <SolutionLayout title="Строка">
       <div className={styles.container}>
-        <form onSubmit={handleSubmit(onSubmit)} className={"pb-30"}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.row}>
             <Controller
               name={"str"}
@@ -43,23 +40,21 @@ export const StringComponent: React.FC = () => {
                   value={value}
                   maxLength={11}
                   required={true}
-                  disabled={isLoader}
+                  disabled={isAnimation}
+                  isLimitText={true}
                 />
               )}
             />
             <Button
               type={"submit"}
               text={"Развернуть"}
-              isLoader={isLoader}
+              isLoader={isAnimation}
               extraClass={"ml-6"}
               disabled={!isValid || !isDirty}
             />
           </div>
-          <div className={styles.row}>
-            <p className={"ml-8 mt-2"}>Максимум — 11 символов</p>
-          </div>
         </form>
-        <div className={`mt-30 ${styles.elements}`}>
+        <div className={`${styles.elements}`}>
           {elements.map((el, idx) => (
             <Circle key={idx} letter={el.value} state={el.state} extraClass={"ml-4 mr-4"} />
           ))}

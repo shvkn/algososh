@@ -1,15 +1,15 @@
-import { IStack, Stack } from "./stack";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ElementStates } from "../../types/element-states";
-import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+
+import { ElementStates, TElement } from "../../types";
+
 import { setChangingState, setDefaultState } from "../../shared/utils";
-import { TElement } from "../../types/element";
 
-export type TStackElement = TElement & { isTop: boolean };
+import { IStack, Stack } from "./stack";
 
-export const useStack = () => {
+type TStackElement = TElement & { isTop: boolean };
+
+export const useAnimatedStack = (animationDelay: number) => {
   const stackRef = useRef<IStack<TStackElement>>();
-
   const [elements, setElements] = useState<TStackElement[]>([]);
   const [isLoader, setLoader] = useState<boolean>(false);
 
@@ -20,11 +20,11 @@ export const useStack = () => {
   const push = useCallback((value: string) => {
     setLoader(true);
     const stack = stackRef.current;
-    if (stack === undefined) {
+    if (!stack) {
       return;
     }
     const top = stack.peak();
-    if (top !== undefined) {
+    if (top) {
       top.isTop = false;
     }
     const newElement: TStackElement = {
@@ -33,42 +33,42 @@ export const useStack = () => {
       isTop: true
     };
     stack.push(newElement);
-    setElements([...(stack.items)]);
+    setElements([...stack.toArray()]);
     setTimeout(() => {
       setDefaultState(newElement);
-      setElements([...(stack.items)]);
+      setElements([...stack.toArray()]);
       setLoader(false);
-    }, SHORT_DELAY_IN_MS);
-  }, []);
+    }, animationDelay);
+  }, [animationDelay]);
 
   const pop = useCallback(() => {
     setLoader(true);
     const stack = stackRef.current;
-    if (stack === undefined) {
+    if (!stack) {
       return;
     }
     const currentTop = stack?.peak();
-    if (currentTop === undefined) {
+    if (!currentTop) {
       return;
     }
     setChangingState(currentTop);
-    setElements([...(stack.items)]);
+    setElements([...stack.toArray()]);
     stack.pop();
     setTimeout(() => {
       const newTop = stack.peak();
-      if (newTop !== undefined) {
+      if (newTop) {
         newTop.isTop = true;
       }
-      setElements([...(stack.items)]);
+      setElements([...stack.toArray()]);
       setLoader(false);
-    }, SHORT_DELAY_IN_MS);
-  }, []);
+    }, animationDelay);
+  }, [animationDelay]);
 
   const reset = useCallback(() => {
     const stack = stackRef.current;
-    if (stack !== undefined) {
+    if (stack) {
       stack.reset();
-      setElements([...(stack.items)]);
+      setElements([...stack.toArray()]);
     }
   }, []);
 

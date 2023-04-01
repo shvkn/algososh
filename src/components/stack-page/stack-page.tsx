@@ -1,25 +1,24 @@
 import React from "react";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Controller, useForm } from "react-hook-form";
-import { Input } from "../ui/input/input";
-import { Button } from "../ui/button/button";
+
+import { Button, Circle, Input, SolutionLayout } from "../ui";
+
+import { SHORT_DELAY_IN_MS } from "../../constants";
+
+import { useAnimatedStack } from "./lib";
 import styles from "./styles.module.css";
-import { Circle } from "../ui/circle/circle";
-import { useStack } from "./lib";
 
 type TForm = { value: string };
-
 const defaultValues: TForm = { value: "" };
 
 export const StackPage: React.FC = () => {
+  const { elements, push, pop, reset, isLoader } = useAnimatedStack(SHORT_DELAY_IN_MS);
   const {
     control,
     handleSubmit,
     reset: resetForm,
     formState: { isValid, isDirty }
   } = useForm({ defaultValues });
-
-  const { elements, push, pop, reset, isLoader } = useStack();
 
   const onSubmit = (data: TForm) => {
     resetForm(defaultValues);

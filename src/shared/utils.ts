@@ -4,11 +4,9 @@ export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve
 export const constructElement = (
   value: string,
   state: ElementStates = ElementStates.Default
-): TElement => ({
-  value: value,
-  state: state
-});
-const setState = (element: TElement, state: ElementStates): void => {
+): TElement => ({ value: value, state: state });
+
+const setState = <T extends TElement>(element: T, state: ElementStates): void => {
   element.state = state;
 };
 export const setDefaultState = <T extends TElement>(...elements: T[]): void => {

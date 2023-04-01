@@ -3,6 +3,8 @@ import { Controller, useForm } from "react-hook-form";
 
 import { Button, Circle, Input, SolutionLayout } from "../ui";
 
+import { SHORT_DELAY_IN_MS } from "../../constants";
+
 import { useFibonacci } from "./lib";
 import styles from "./styles.module.css";
 
@@ -18,7 +20,7 @@ export const FibonacciPage: React.FC = () => {
     formState: { isValid, isDirty }
   } = useForm({ defaultValues });
 
-  const { elements, isAnimation, fibonacci } = useFibonacci();
+  const { elements, isAnimation, fibonacci } = useFibonacci(SHORT_DELAY_IN_MS);
 
   const onSubmit = (data: TStringForm) => {
     resetForm();

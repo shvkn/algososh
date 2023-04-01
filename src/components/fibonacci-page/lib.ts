@@ -2,8 +2,6 @@ import { useState } from "react";
 
 import { TElement } from "../../types";
 
-import { SHORT_DELAY_IN_MS } from "../../constants";
-
 import { constructElement, delay } from "../../shared/utils";
 
 const getFibonacciSequence = (
@@ -17,7 +15,7 @@ const getFibonacciSequence = (
     : getFibonacciSequence(n, next, current + next, [...numbers, current]);
 };
 
-export const useFibonacci = (animationDelay: number = SHORT_DELAY_IN_MS) => {
+export const useFibonacci = (animationDelay: number) => {
   const [elements, setElements] = useState<TElement[]>([]);
   const [isAnimation, setAnimation] = useState(false);
 

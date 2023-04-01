@@ -1,22 +1,14 @@
+.container {
+  width: 952px;
+  margin: 0 auto;
+}
+
 .row {
   display: flex;
 }
 
 .input {
   width: 204px;
-}
-
-.panel {
-  width: 952px;
-  margin: 0 auto;
-}
-
-.button {
-  width: 175px;
-}
-
-.buttonLarge {
-  width: 362px;
 }
 
 .node {
@@ -30,7 +22,7 @@
 
 .list {
   display: flex;
-  margin: 100px auto;
-  width: 952px;
   justify-content: center;
+  margin-top: 56px;
+  height: 204px;
 }

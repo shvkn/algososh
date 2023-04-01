@@ -1,6 +1,6 @@
 import { TElement } from "./element";
 
-export type TListElement = Partial<TElement> & {
+export type TListElement = TElement & {
   head?: TListElement;
   tail?: TListElement;
 }

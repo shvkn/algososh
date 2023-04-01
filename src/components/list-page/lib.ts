@@ -2,13 +2,33 @@ import { useEffect, useRef, useState } from "react";
 
 import { LinkedList } from "./list";
 
-import { SHORT_DELAY_IN_MS } from "../../constants";
-
 import { ElementStates, TListElement } from "../../types";
 
-import { delay } from "../../shared/utils";
+import { delay, setChangingState, setDefaultState, setModifiedState } from "../../shared/utils";
 
-export const useLinkedList = () => {
+const setElementHead = (element: TListElement | undefined, head: TListElement) => {
+  if (element) {
+    element.head = head;
+  }
+};
+const setElementTail = (element: TListElement | undefined, tail: TListElement) => {
+  if (element) {
+    element.tail = tail;
+  }
+};
+const dropElementHead = (element: TListElement | undefined) => {
+  if (element) {
+    delete element.head;
+  }
+};
+
+const dropElementValue = (element: TListElement | undefined) => {
+  if (element) {
+    element.value = "";
+  }
+};
+
+export const useAnimatedLinkedList = (animationDelay: number) => {
   const listRef = useRef<LinkedList<TListElement>>();
   const [elements, setElements] = useState<TListElement[]>([]);
   const [currentAnimation, setAnimation] = useState<
@@ -27,6 +47,15 @@ export const useLinkedList = () => {
   const size = elements.length;
   const isEmpty = elements.length === 0;
 
+  const updateElements = async () => {
+    const list = listRef.current;
+    if (list === undefined) {
+      return;
+    }
+    await delay(animationDelay);
+    setElements(list.toArray());
+  };
+
   const insertAtHead = async (value: string) => {
     const list = listRef.current;
     if (list === undefined) {
@@ -34,25 +63,19 @@ export const useLinkedList = () => {
     }
     try {
       setAnimation("InsertAtHead");
-      const newHead: TListElement = {
+      const newElement: TListElement = {
         value,
         state: ElementStates.Changing
       };
-      const currentHead = list.head;
-      if (currentHead) {
-        currentHead.data.head = newHead;
-      }
-      setElements(list.toArray());
-      list.insertAtHead(newHead);
-      await delay(SHORT_DELAY_IN_MS);
-      if (currentHead) {
-        delete currentHead.data.head;
-      }
-      newHead.state = ElementStates.Modified;
-      setElements(list.toArray());
-      await delay(SHORT_DELAY_IN_MS);
-      newHead.state = ElementStates.Default;
-      setElements(list.toArray());
+      const elementAtHead = list.head?.data;
+      setElementHead(elementAtHead, newElement);
+      await updateElements();
+      list.insertAtHead(newElement);
+      dropElementHead(elementAtHead);
+      setModifiedState(newElement);
+      await updateElements();
+      setDefaultState(newElement);
+      await updateElements();
     } catch (e) {
       console.log(e);
     } finally {
@@ -67,28 +90,19 @@ export const useLinkedList = () => {
     }
     try {
       setAnimation("InsertAtTail");
-      const element: TListElement = {
+      const newElement: TListElement = {
         value,
         state: ElementStates.Changing
       };
-      const currentTail = list.tail;
-      if (currentTail) {
-        currentTail.data.head = element;
-      }
-      setElements(list.toArray());
-      list.insertAtTail(element);
-
-      await delay(SHORT_DELAY_IN_MS);
-      if (currentTail) {
-        delete currentTail.data.head;
-        delete currentTail.data.tail;
-      }
-      element.state = ElementStates.Modified;
-      setElements(list.toArray());
-
-      await delay(SHORT_DELAY_IN_MS);
-      element.state = ElementStates.Default;
-      setElements(list.toArray());
+      const elementAtTail = list.tail?.data;
+      setElementHead(elementAtTail, newElement);
+      await updateElements();
+      list.insertAtTail(newElement);
+      dropElementHead(elementAtTail);
+      setModifiedState(newElement);
+      await updateElements();
+      setDefaultState(newElement);
+      await updateElements();
     } catch (e) {
       console.log(e);
     } finally {
@@ -97,21 +111,22 @@ export const useLinkedList = () => {
   };
 
   const removeFromHead = async () => {
+    setAnimation("RemoveFromHead");
+    const list = listRef.current;
+    if (list === undefined || list.isEmpty()) {
+      return;
+    }
+    const elementAtHead = list.head?.data;
+    if (!elementAtHead) {
+      return;
+    }
     try {
-      setAnimation("RemoveFromHead");
-      const list = listRef.current;
-      if (list === undefined || list.isEmpty()) {
-        return;
-      }
-      const currentHead = list.head;
-      if (currentHead) {
-        currentHead.data.tail = { ...currentHead.data, state: ElementStates.Changing };
-        delete currentHead.data.value;
-      }
+      const removingElement = { ...elementAtHead, state: ElementStates.Changing };
+      dropElementValue(elementAtHead);
+      setElementTail(elementAtHead, removingElement);
       setElements(list.toArray());
-      await delay(SHORT_DELAY_IN_MS);
       list.removeFromHead();
-      setElements(list.toArray());
+      await updateElements();
     } catch (e) {
       console.log(e);
     } finally {
@@ -129,34 +144,26 @@ export const useLinkedList = () => {
     }
     try {
       setAnimation("RemoveAt");
-      if (index === 0) {
-        return removeFromHead();
-      } else if (index === list.size - 1) {
-        return removeFromTail();
-      }
       const passedElements = [];
       let currIndex = 0;
       let curr = list.head;
       while (currIndex < index && curr) {
         passedElements.push(curr);
-        curr.data.state = ElementStates.Changing;
-        await delay(SHORT_DELAY_IN_MS);
-        setElements(list.toArray());
+        setChangingState(curr.data);
+        await updateElements();
         currIndex += 1;
         curr = curr.next;
       }
-      if (curr) {
-        await delay(SHORT_DELAY_IN_MS);
-        curr.data.tail = { ...curr.data, state: ElementStates.Changing };
-        delete curr.data.value;
+      const elementAtIndex = curr?.data;
+      if (elementAtIndex) {
+        const removingElement = { ...elementAtIndex, state: ElementStates.Changing };
+        dropElementValue(elementAtIndex);
+        setElementTail(elementAtIndex, removingElement);
       }
-      setElements(list.toArray());
-      await delay(SHORT_DELAY_IN_MS);
+      await updateElements();
       list.removeAt(index);
-      passedElements.forEach((el) => {
-        el.data.state = ElementStates.Default;
-      });
-      setElements(list.toArray());
+      passedElements.forEach((el) => setDefaultState(el.data));
+      await updateElements();
     } catch (e) {
       console.log(e);
     } finally {
@@ -174,44 +181,35 @@ export const useLinkedList = () => {
     }
     try {
       setAnimation("InsertAt");
-      const element: TListElement = {
+      const newElement: TListElement = {
         value,
         state: ElementStates.Changing
       };
       const modified = [];
-      let currIndex = 0;
-      let curr = list.head;
-      while (currIndex < index && curr) {
-        modified.push(curr);
-        curr.data.state = ElementStates.Changing;
-        curr.data.head = element;
-        await delay(SHORT_DELAY_IN_MS);
-        setElements(list.toArray());
-        delete curr.data.head;
-        currIndex += 1;
-        curr = curr.next;
+      let i = 0;
+      let currNode = list.head;
+      let elementAtIndex;
+
+      while (i <= index && currNode) {
+        elementAtIndex = currNode.data;
+        if (i < index) {
+          modified.push(elementAtIndex);
+          setChangingState(elementAtIndex);
+        }
+        setElementHead(elementAtIndex, newElement);
+        await updateElements();
+        dropElementHead(elementAtIndex);
+        currNode = currNode.next;
+        i += 1;
       }
-      if (curr) {
-        curr.data.head = element;
-        curr.data.state = ElementStates.Changing;
-        await delay(SHORT_DELAY_IN_MS);
-        setElements(list.toArray());
-        curr.data.state = ElementStates.Default;
-      }
-      setElements(list.toArray());
-      await delay(SHORT_DELAY_IN_MS);
-      list.insertAt(index, element);
-      if (curr) {
-        delete curr.data.head;
-        element.state = ElementStates.Modified;
-        setElements(list.toArray());
-        element.state = ElementStates.Default;
-      }
-      modified.forEach((el) => {
-        el.data.state = ElementStates.Default;
-      });
-      await delay(SHORT_DELAY_IN_MS);
-      setElements(list.toArray());
+
+      list.insertAt(index, newElement);
+      dropElementHead(elementAtIndex);
+      setModifiedState(newElement);
+      await updateElements();
+      setDefaultState(newElement);
+      modified.forEach((elem) => setDefaultState(elem));
+      await updateElements();
     } catch (e) {
       console.log(e);
     } finally {
@@ -226,15 +224,16 @@ export const useLinkedList = () => {
     }
     try {
       setAnimation("RemoveFromTail");
-      const currentTail = list.tail;
-      if (currentTail) {
-        currentTail.data.tail = { ...currentTail.data, state: ElementStates.Changing };
-        currentTail.data.value = "";
+      const elementAtTail = list.tail?.data;
+      if (!elementAtTail) {
+        return;
       }
+      const removingElement = { ...elementAtTail, state: ElementStates.Changing };
+      dropElementValue(elementAtTail);
+      setElementTail(elementAtTail, removingElement);
       setElements(list.toArray());
-      await delay(SHORT_DELAY_IN_MS);
       list.removeFromTail();
-      setElements(list.toArray());
+      await updateElements();
     } catch (e) {
       console.log(e);
     } finally {

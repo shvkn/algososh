@@ -2,11 +2,9 @@ import { useState } from "react";
 
 import { ElementStates, TElement } from "../../types";
 
-import { DELAY_IN_MS } from "../../constants";
-
 import { constructElement, delay, swap } from "../../shared/utils";
 
-export const useReverse = (animationDelay: number = DELAY_IN_MS) => {
+export const useAnimatedReverse = (animationDelay: number) => {
   const [elements, setElements] = useState<TElement[]>([]);
   const [isAnimation, setAnimation] = useState(false);
 

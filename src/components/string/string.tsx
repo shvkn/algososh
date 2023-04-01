@@ -3,7 +3,9 @@ import { Controller, useForm } from "react-hook-form";
 
 import { Button, Circle, Input, SolutionLayout } from "../ui";
 
-import { useReverse } from "./lib";
+import { DELAY_IN_MS } from "../../constants";
+
+import { useAnimatedReverse } from "./lib";
 import styles from "./style.module.css";
 
 type TStringForm = { str: string };
@@ -17,7 +19,7 @@ export const StringComponent: React.FC = () => {
     formState: { isValid, isDirty }
   } = useForm({ defaultValues });
 
-  const { elements, reverse, isAnimation } = useReverse();
+  const { elements, reverse, isAnimation } = useAnimatedReverse(DELAY_IN_MS);
 
   const onSubmit = (data: TStringForm) => {
     resetForm();

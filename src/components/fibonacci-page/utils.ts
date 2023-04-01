@@ -4,7 +4,7 @@ import { TElement } from "../../types";
 
 import { constructElement, delay } from "../../shared/utils";
 
-const getFibonacciSequence = (
+const getFibonacciNumbers = (
   n: number,
   current = 0,
   next = 1,
@@ -12,7 +12,7 @@ const getFibonacciSequence = (
 ): number[] => {
   return numbers.length === n
     ? numbers
-    : getFibonacciSequence(n, next, current + next, [...numbers, current]);
+    : getFibonacciNumbers(n, next, current + next, [...numbers, current]);
 };
 
 export const useFibonacci = (animationDelay: number) => {
@@ -22,7 +22,7 @@ export const useFibonacci = (animationDelay: number) => {
   const fibonacci = async (n: number) => {
     setAnimation(true);
     const shift = 1;
-    const numbers = getFibonacciSequence(n + shift + 1);
+    const numbers = getFibonacciNumbers(n + shift + 1);
     const arr: TElement[] = [];
     for(let i = shift; i < numbers.length; i += 1) {
       await delay(animationDelay);

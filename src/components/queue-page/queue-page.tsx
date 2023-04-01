@@ -5,7 +5,7 @@ import { Button, Circle, Input, SolutionLayout } from "../ui";
 
 import { HEAD, SHORT_DELAY_IN_MS, TAIL } from "../../constants";
 
-import { useAnimatedQueue } from "./lib";
+import { useAnimatedQueue } from "./utils";
 import styles from "./styles.module.css";
 
 type TForm = { value: string };

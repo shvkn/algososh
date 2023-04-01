@@ -4,7 +4,7 @@ import { Button, Column, RadioInput, SolutionLayout } from "../ui";
 
 import { Direction } from "../../types";
 
-import { SortingAlgorithm, useAnimatedSorting } from "./lib";
+import { SortingAlgorithm, useAnimatedSorting } from "./utils";
 import styles from "./styles.module.css";
 import { SHORT_DELAY_IN_MS } from "../../constants";
 

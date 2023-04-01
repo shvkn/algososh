@@ -5,7 +5,7 @@ import { Button, Circle, Input, SolutionLayout } from "../ui";
 
 import { DELAY_IN_MS } from "../../constants";
 
-import { useAnimatedReverse } from "./lib";
+import { useAnimatedReverse } from "./utils";
 import styles from "./style.module.css";
 
 type TStringForm = { str: string };

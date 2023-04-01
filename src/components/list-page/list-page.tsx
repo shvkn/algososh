@@ -6,7 +6,7 @@ import { ArrowIcon, Button, Circle, Input, SolutionLayout } from "../ui";
 import { HEAD, SHORT_DELAY_IN_MS, TAIL } from "../../constants";
 import { ElementStates } from "../../types";
 
-import { useAnimatedLinkedList } from "./lib";
+import { useAnimatedLinkedList } from "./utils";
 import styles from "./styles.module.css";
 
 type TForm = { value: string, index: string };

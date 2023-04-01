@@ -5,7 +5,7 @@ import { Button, Circle, Input, SolutionLayout } from "../ui";
 
 import { SHORT_DELAY_IN_MS } from "../../constants";
 
-import { useFibonacci } from "./lib";
+import { useFibonacci } from "./utils";
 import styles from "./styles.module.css";
 
 type TStringForm = { num: string };

@@ -67,7 +67,7 @@ export const useAnimatedStack = (animationDelay: number) => {
   const reset = useCallback(() => {
     const stack = stackRef.current;
     if (stack) {
-      stack.reset();
+      stack.clear();
       setElements([...stack.toArray()]);
     }
   }, []);

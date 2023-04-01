@@ -70,7 +70,7 @@ export const useAnimatedLinkedList = (animationDelay: number) => {
       const elementAtHead = list.head?.data;
       setElementHead(elementAtHead, newElement);
       await updateElements();
-      list.insertAtHead(newElement);
+      list.prepend(newElement);
       dropElementHead(elementAtHead);
       setModifiedState(newElement);
       await updateElements();
@@ -97,7 +97,7 @@ export const useAnimatedLinkedList = (animationDelay: number) => {
       const elementAtTail = list.tail?.data;
       setElementHead(elementAtTail, newElement);
       await updateElements();
-      list.insertAtTail(newElement);
+      list.append(newElement);
       dropElementHead(elementAtTail);
       setModifiedState(newElement);
       await updateElements();
@@ -125,7 +125,7 @@ export const useAnimatedLinkedList = (animationDelay: number) => {
       dropElementValue(elementAtHead);
       setElementTail(elementAtHead, removingElement);
       setElements(list.toArray());
-      list.removeFromHead();
+      list.deleteHead();
       await updateElements();
     } catch (e) {
       console.log(e);
@@ -161,7 +161,7 @@ export const useAnimatedLinkedList = (animationDelay: number) => {
         setElementTail(elementAtIndex, removingElement);
       }
       await updateElements();
-      list.removeAt(index);
+      list.deleteByIndex(index);
       passedElements.forEach((el) => setDefaultState(el.data));
       await updateElements();
     } catch (e) {
@@ -203,7 +203,7 @@ export const useAnimatedLinkedList = (animationDelay: number) => {
         i += 1;
       }
 
-      list.insertAt(index, newElement);
+      list.addByIndex(index, newElement);
       dropElementHead(elementAtIndex);
       setModifiedState(newElement);
       await updateElements();
@@ -232,7 +232,7 @@ export const useAnimatedLinkedList = (animationDelay: number) => {
       dropElementValue(elementAtTail);
       setElementTail(elementAtTail, removingElement);
       setElements(list.toArray());
-      list.removeFromTail();
+      list.deleteTail();
       await updateElements();
     } catch (e) {
       console.log(e);

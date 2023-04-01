@@ -18,12 +18,12 @@ interface ILinkedList<T> {
   tail: IListNode<T> | null;
   size: number;
   toArray: () => T[];
-  insertAtHead: (value: T) => IListNode<T>;
-  insertAtTail: (value: T) => IListNode<T>;
-  insertAt: (index: number, value: T) => IListNode<T>;
-  removeFromHead: () => IListNode<T> | null;
-  removeFromTail: () => IListNode<T> | null;
-  removeAt: (index: number) => IListNode<T> | null;
+  prepend: (value: T) => IListNode<T>;
+  append: (value: T) => IListNode<T>;
+  addByIndex: (index: number, value: T) => IListNode<T>;
+  deleteHead: () => IListNode<T> | null;
+  deleteTail: () => IListNode<T> | null;
+  deleteByIndex: (index: number) => IListNode<T> | null;
 }
 
 export class LinkedList<T> implements ILinkedList<T> {
@@ -31,17 +31,9 @@ export class LinkedList<T> implements ILinkedList<T> {
   tail: ListNode<T> | null = null;
   size = 0;
 
-  constructor(head?: ListNode<T>) {
-    if (head) {
-      this.head = head;
-      let current: ListNode<T> | null = head;
-      let size = 0;
-      while (current) {
-        current = current.next;
-        size += 1;
-      }
-      this.tail = current;
-      this.size = size;
+  constructor(initArray?: T[]) {
+    if (initArray) {
+      initArray.map((item) => this.append(item));
     }
   }
 
@@ -59,7 +51,7 @@ export class LinkedList<T> implements ILinkedList<T> {
     return this.size === 0;
   }
 
-  insertAtHead(value: T): ListNode<T> {
+  prepend(value: T): ListNode<T> {
     const node = new ListNode(value);
     node.next = this.head;
     this.head = node;
@@ -70,9 +62,9 @@ export class LinkedList<T> implements ILinkedList<T> {
     return node;
   }
 
-  insertAtTail(value: T): ListNode<T> {
+  append(value: T): ListNode<T> {
     if (this.tail === null || this.head === null || this.size === 0) {
-      return this.insertAtHead(value);
+      return this.prepend(value);
     }
     const node = new ListNode(value);
     this.tail.next = node;
@@ -81,15 +73,15 @@ export class LinkedList<T> implements ILinkedList<T> {
     return node;
   }
 
-  insertAt(index: number, value: T) {
+  addByIndex(index: number, value: T) {
     if (index < 0 || index > this.size) {
       throw new Error("Index is out of range");
     }
     const node = new ListNode(value);
     if (index === 0) {
-      return this.insertAtHead(value);
+      return this.prepend(value);
     } else if (index === this.size) {
-      return this.insertAtTail(value);
+      return this.append(value);
     }
     let curr = this.head;
     let currIndex = 0;
@@ -105,7 +97,7 @@ export class LinkedList<T> implements ILinkedList<T> {
     return node;
   }
 
-  removeFromHead() {
+  deleteHead() {
     const head = this.head;
     if (this.head === this.tail) {
      this.head = this.tail = null;
@@ -116,7 +108,7 @@ export class LinkedList<T> implements ILinkedList<T> {
     return head;
   }
 
-  removeFromTail() {
+  deleteTail() {
     const tail = this.tail;
     if (this.head === this.tail) {
       this.head = this.tail = null;
@@ -136,14 +128,14 @@ export class LinkedList<T> implements ILinkedList<T> {
     return tail;
   }
 
-  removeAt(index: number) {
+  deleteByIndex(index: number) {
     if (index < 0 || index > this.size - 1) {
       throw new Error("Index is out of range");
     }
     if (index === 0) {
-      return this.removeFromHead();
+      return this.deleteHead();
     } else if (index === this.size - 1) {
-      return this.removeFromTail();
+      return this.deleteTail();
     }
     let curr = this.head;
     let prev = null;

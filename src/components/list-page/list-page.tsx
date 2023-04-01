@@ -8,12 +8,14 @@ import { ElementStates } from "../../types";
 
 import { useAnimatedLinkedList } from "./utils";
 import styles from "./styles.module.css";
+import { randomArr } from "../../shared/utils";
 
 type TForm = { value: string, index: string };
 const defaultValues: TForm = { value: "", index: "" };
+const initialArray = randomArr(3, 6);
 
 export const ListPage: React.FC = () => {
-  const list = useAnimatedLinkedList(SHORT_DELAY_IN_MS);
+  const list = useAnimatedLinkedList(initialArray, SHORT_DELAY_IN_MS);
   const {
     control,
     reset: resetForm,
@@ -32,7 +34,7 @@ export const ListPage: React.FC = () => {
       return;
     }
     resetForm(defaultValues);
-    void list.insertAtHead(value)
+    void list.insertAtHead(value);
   };
 
   const insertAtTail = () => {
@@ -40,17 +42,17 @@ export const ListPage: React.FC = () => {
       return;
     }
     resetForm(defaultValues);
-    void list.insertAtTail(value)
+    void list.insertAtTail(value);
   };
 
   const removeFromHead = () => {
     resetForm(defaultValues);
-    void list.removeFromHead()
+    void list.removeFromHead();
   };
 
   const removeFromTail = () => {
     resetForm(defaultValues);
-    void list.removeFromTail()
+    void list.removeFromTail();
   };
 
   const insertAt = () => {
@@ -58,7 +60,7 @@ export const ListPage: React.FC = () => {
       return;
     }
     resetForm(defaultValues);
-    void list.insertAt(Number(index), value)
+    void list.insertAt(Number(index), value);
   };
 
   const removeAt = () => {
@@ -66,7 +68,7 @@ export const ListPage: React.FC = () => {
       return;
     }
     resetForm(defaultValues);
-    void list.removeAt(Number(index))
+    void list.removeAt(Number(index));
   };
 
   return (

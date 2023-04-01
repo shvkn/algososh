@@ -4,7 +4,13 @@ import { LinkedList } from "./list";
 
 import { ElementStates, TListElement } from "../../types";
 
-import { delay, setChangingState, setDefaultState, setModifiedState } from "../../shared/utils";
+import {
+  constructElements,
+  delay,
+  setChangingState,
+  setDefaultState,
+  setModifiedState
+} from "../../shared/utils";
 
 const setElementHead = (element: TListElement | undefined, head: TListElement) => {
   if (element) {
@@ -28,7 +34,7 @@ const dropElementValue = (element: TListElement | undefined) => {
   }
 };
 
-export const useAnimatedLinkedList = (animationDelay: number) => {
+export const useAnimatedLinkedList = (initArray: number[], animationDelay: number) => {
   const listRef = useRef<LinkedList<TListElement>>();
   const [elements, setElements] = useState<TListElement[]>([]);
   const [currentAnimation, setAnimation] = useState<
@@ -41,8 +47,14 @@ export const useAnimatedLinkedList = (animationDelay: number) => {
     | null>(null);
 
   useEffect(() => {
-    listRef.current = new LinkedList<TListElement>();
-  }, []);
+    const elements = constructElements(initArray);
+    listRef.current = new LinkedList<TListElement>(elements);
+    const list = listRef.current;
+    if (list === undefined) {
+      return;
+    }
+    setElements(list.toArray())
+  }, [initArray]);
 
   const size = elements.length;
   const isEmpty = elements.length === 0;

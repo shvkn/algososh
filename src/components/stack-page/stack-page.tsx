@@ -42,7 +42,8 @@ export const StackPage: React.FC = () => {
                 value={value}
                 required={true}
                 extraClass={styles.input}
-              />
+                maxLength={4}
+                isLimitText={true} />
             )}
           />
           <Button type={"submit"}
@@ -59,9 +60,6 @@ export const StackPage: React.FC = () => {
                   disabled={isLoader || elements.length === 0}
                   onClick={() => reset()}
                   extraClass={"ml-40"} />
-        </div>
-        <div className={styles.row}>
-          <p className={"ml-8 mt-2"}>Максимум - 4 символа</p>
         </div>
       </form>
       <div className={styles.stack}>

@@ -11,14 +11,14 @@ type TStackElement = TElement & { isTop: boolean };
 export const useAnimatedStack = (animationDelay: number) => {
   const stackRef = useRef<IStack<TStackElement>>();
   const [elements, setElements] = useState<TStackElement[]>([]);
-  const [isLoader, setLoader] = useState<boolean>(false);
+  const [currentAnimation, setAnimation] = useState<"Push" | "Pop" | null>(null);
 
   useEffect(() => {
     stackRef.current = new Stack();
   }, []);
 
   const push = useCallback((value: string) => {
-    setLoader(true);
+    setAnimation("Push");
     const stack = stackRef.current;
     if (!stack) {
       return;
@@ -37,12 +37,12 @@ export const useAnimatedStack = (animationDelay: number) => {
     setTimeout(() => {
       setDefaultState(newElement);
       setElements([...stack.toArray()]);
-      setLoader(false);
+      setAnimation(null);
     }, animationDelay);
   }, [animationDelay]);
 
   const pop = useCallback(() => {
-    setLoader(true);
+    setAnimation("Pop");
     const stack = stackRef.current;
     if (!stack) {
       return;
@@ -60,7 +60,7 @@ export const useAnimatedStack = (animationDelay: number) => {
         newTop.isTop = true;
       }
       setElements([...stack.toArray()]);
-      setLoader(false);
+      setAnimation(null);
     }, animationDelay);
   }, [animationDelay]);
 
@@ -77,6 +77,6 @@ export const useAnimatedStack = (animationDelay: number) => {
     push,
     pop,
     reset,
-    isLoader
+    currentAnimation
   };
 };

@@ -12,7 +12,7 @@ type TForm = { value: string };
 const defaultValues: TForm = { value: "" };
 
 export const StackPage: React.FC = () => {
-  const { elements, push, pop, reset, isLoader } = useAnimatedStack(SHORT_DELAY_IN_MS);
+  const { elements, push, pop, reset, currentAnimation } = useAnimatedStack(SHORT_DELAY_IN_MS);
   const {
     control,
     handleSubmit,
@@ -25,6 +25,8 @@ export const StackPage: React.FC = () => {
     const { value } = data;
     push(value);
   };
+
+  const isIdle = currentAnimation === null;
 
   return (
     <SolutionLayout title="Стек">
@@ -48,16 +50,20 @@ export const StackPage: React.FC = () => {
           />
           <Button type={"submit"}
                   text={"Добавить"}
-                  disabled={isLoader || !isValid || !isDirty || elements.length >= 20}
+                  disabled={!isIdle || !isValid || !isDirty || elements.length >= 20}
+                  isLoader={currentAnimation === "Push"}
                   extraClass={"ml-6"} />
+
           <Button type={"button"}
                   text={"Удалить"}
                   onClick={() => pop()}
-                  disabled={isLoader || elements.length === 0}
+                  disabled={!isIdle || elements.length === 0}
+                  isLoader={currentAnimation === "Pop"}
                   extraClass={"ml-6"} />
+
           <Button type={"button"}
                   text={"Очистить"}
-                  disabled={isLoader || elements.length === 0}
+                  disabled={!isIdle || elements.length === 0}
                   onClick={() => reset()}
                   extraClass={"ml-40"} />
         </div>

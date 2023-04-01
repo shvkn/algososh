@@ -26,11 +26,11 @@ export const useAnimatedQueue = (size: number, animationDelay: number) => {
       }
       const element: TElement = constructElement(value, ElementStates.Changing);
       queue.enqueue(element);
-      setElements([...queue.items]);
+      setElements([...queue.elements]);
       setAnimation("Enqueue");
       setTimeout(() => {
         setDefaultState(element);
-        setElements([...queue.items]);
+        setElements([...queue.elements]);
         setAnimation(null);
       }, animationDelay);
     } catch (e) {
@@ -49,11 +49,11 @@ export const useAnimatedQueue = (size: number, animationDelay: number) => {
         return;
       }
       setChangingState(peak);
-      setElements([...queue.items]);
+      setElements([...queue.elements]);
       setAnimation("Dequeue");
       setTimeout(() => {
         queue.dequeue();
-        setElements([...queue.items]);
+        setElements([...queue.elements]);
         setAnimation(null);
       }, animationDelay);
     } catch (e) {
@@ -67,8 +67,8 @@ export const useAnimatedQueue = (size: number, animationDelay: number) => {
       if (!queue) {
         return;
       }
-      queue.reset();
-      setElements([...queue.items]);
+      queue.clear();
+      setElements([...queue.elements]);
     } catch (e) {
       console.log(e);
     }

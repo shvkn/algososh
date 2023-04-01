@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { Queue } from "./queue";
-import { ElementStates } from "../../types/element-states";
-import { SHORT_DELAY_IN_MS } from "../../constants/delays";
-import { TElement } from "../../types/element";
-import { constructElement, setDefaultState } from "../../shared/utils";
 
-export const useQueue = (size: number) => {
+import { ElementStates, TElement } from "../../types";
+
+import { constructElement, setChangingState, setDefaultState } from "../../shared/utils";
+
+import { Queue } from "./queue";
+
+export const useAnimatedQueue = (size: number, animationDelay: number) => {
   const queueRef = useRef<Queue<TElement>>();
   const [elements, setElements] = useState<TElement[]>([]);
-  const [isLoader, setLoader] = useState<boolean>(false);
+  const [currentAnimation, setAnimation] = useState<
+    | "Enqueue"
+    | "Dequeue"
+    | null>(null);
 
   useEffect(() => {
     queueRef.current = new Queue<TElement>(size);
@@ -23,12 +27,12 @@ export const useQueue = (size: number) => {
       const element: TElement = constructElement(value, ElementStates.Changing);
       queue.enqueue(element);
       setElements([...queue.items]);
-      setLoader(true);
+      setAnimation("Enqueue");
       setTimeout(() => {
         setDefaultState(element);
         setElements([...queue.items]);
-        setLoader(false);
-      }, SHORT_DELAY_IN_MS);
+        setAnimation(null);
+      }, animationDelay);
     } catch (e) {
       console.log(e);
     }
@@ -37,21 +41,21 @@ export const useQueue = (size: number) => {
   const dequeue = () => {
     try {
       const queue = queueRef.current;
-      if (queue === undefined) {
+      if (!queue) {
         return;
       }
       const peak = queue.peak();
-      if (peak === undefined) {
+      if (!peak) {
         return;
       }
-      peak.state = ElementStates.Changing;
+      setChangingState(peak);
       setElements([...queue.items]);
-      setLoader(true);
+      setAnimation("Dequeue");
       setTimeout(() => {
         queue.dequeue();
         setElements([...queue.items]);
-        setLoader(false);
-      }, SHORT_DELAY_IN_MS);
+        setAnimation(null);
+      }, animationDelay);
     } catch (e) {
       console.log(e);
     }
@@ -60,7 +64,7 @@ export const useQueue = (size: number) => {
   const reset = () => {
     try {
       const queue = queueRef.current;
-      if (queue === undefined) {
+      if (!queue) {
         return;
       }
       queue.reset();
@@ -73,7 +77,7 @@ export const useQueue = (size: number) => {
   return {
     enqueue,
     elements,
-    isLoader,
+    currentAnimation,
     dequeue,
     reset
   };

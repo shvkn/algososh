@@ -1,15 +1,14 @@
 import React from "react";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import styles from "./styles.module.css";
 import { Controller, useForm } from "react-hook-form";
-import { Input } from "../ui/input/input";
-import { Button } from "../ui/button/button";
-import { useQueue } from "./lib";
-import { Circle } from "../ui/circle/circle";
+
+import { Button, Circle, Input, SolutionLayout } from "../ui";
+
+import { HEAD, SHORT_DELAY_IN_MS, TAIL } from "../../constants";
+
+import { useAnimatedQueue } from "./lib";
+import styles from "./styles.module.css";
 
 type TForm = { value: string };
-
-
 const defaultValues: TForm = { value: "" };
 
 export const QueuePage: React.FC = () => {
@@ -20,13 +19,22 @@ export const QueuePage: React.FC = () => {
     formState: { isValid, isDirty }
   } = useForm({ defaultValues });
 
-  const { elements, isLoader, enqueue, dequeue, reset } = useQueue(7);
+  const {
+    elements,
+    currentAnimation,
+    enqueue,
+    dequeue,
+    reset
+  } = useAnimatedQueue(7, SHORT_DELAY_IN_MS);
 
   const onSubmit = (data: TForm) => {
     resetForm(defaultValues);
     const { value } = data;
     enqueue(value);
   };
+
+  const isIdle = currentAnimation === null;
+
   return (
     <SolutionLayout title="Очередь">
       <form onSubmit={handleSubmit(onSubmit)} className={styles.panel}>
@@ -34,44 +42,49 @@ export const QueuePage: React.FC = () => {
           <Controller
             name={"value"}
             control={control}
-            rules={{ maxLength: 4, pattern: /^\d+$/ }}
+            rules={{ pattern: /^\d{1,4}$/ }}
             render={({ field: { onChange, name, value } }) => (
               <Input
                 id={name}
                 onChange={onChange}
                 name={name}
+                minLength={1}
+                maxLength={4}
+                isLimitText={true}
                 value={value}
                 required={true}
                 extraClass={styles.input}
+                disabled={!isIdle}
               />
             )}
           />
           <Button type={"submit"}
                   text={"Добавить"}
-                  disabled={isLoader || !isValid || !isDirty || elements?.length >= 20}
+                  disabled={!isIdle || !isValid || !isDirty || elements?.length >= 20}
+                  isLoader={currentAnimation === "Enqueue"}
                   extraClass={"ml-6"} />
+
           <Button type={"button"}
                   text={"Удалить"}
                   onClick={() => dequeue()}
-                  disabled={isLoader || elements?.length === 0}
+                  disabled={!isIdle || elements?.length === 0}
+                  isLoader={currentAnimation === "Dequeue"}
                   extraClass={"ml-6"} />
+
           <Button type={"button"}
                   text={"Очистить"}
-                  disabled={isLoader || elements?.length === 0}
+                  disabled={!isIdle || elements?.length === 0}
                   onClick={() => reset()}
                   extraClass={"ml-40"} />
         </div>
-        <div className={styles.row}>
-          <p className={"ml-8 mt-2"}>Максимум - 4 символа</p>
-        </div>
       </form>
       <div className={styles.queue}>
-        {elements.map(({ value, state }, idx) => {
+        {elements.map(({ value, state }, idx, { length }) => {
           return <Circle key={idx}
                          letter={value.toString()}
                          index={idx}
-                         head={idx === 0 ? "head" : ""}
-                         tail={idx === elements.length - 1 ? "tail" : ""}
+                         head={idx === 0 ? HEAD : ""}
+                         tail={idx === length - 1 ? TAIL : ""}
                          state={state}
                          extraClass={"ml-8 mr-8 mb-40"} />;
         })}

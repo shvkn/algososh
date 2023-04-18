@@ -92,11 +92,11 @@
   background-image: url("../../images/queue-hover.svg");
 }
 
-.list {
+.group {
   background-image: url("../../images/list.svg");
 }
 
-.list:hover {
+.group:hover {
   background-image: url("../../images/list-hover.svg");
 }
 

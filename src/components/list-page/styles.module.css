@@ -1,0 +1,28 @@
+.container {
+  width: 952px;
+  margin: 0 auto;
+}
+
+.row {
+  display: flex;
+}
+
+.input {
+  width: 204px;
+}
+
+.node {
+  display: flex;
+  align-items: center;
+}
+
+.arrow {
+  margin: 0 25px;
+}
+
+.list {
+  display: flex;
+  justify-content: center;
+  margin-top: 56px;
+  height: 204px;
+}

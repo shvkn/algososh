@@ -1,0 +1,15 @@
+.container {
+  width: 567px;
+  height: 286px;
+  margin: auto;
+}
+
+.row {
+  display: flex;
+}
+
+.elements {
+  display: flex;
+  justify-content: center;
+  margin-top: 120px;
+}

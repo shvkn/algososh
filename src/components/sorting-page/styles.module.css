@@ -1,0 +1,28 @@
+.panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 924px;
+  margin: 0 auto 48px;
+}
+
+.group {
+  display: flex;
+  border: none;
+}
+
+.buttons {
+  display: flex;
+}
+
+.button {
+  width: 205px;
+}
+
+.array {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 348px;
+  margin-top: auto;
+}

@@ -9,6 +9,9 @@ export const useAnimatedReverse = (animationDelay: number) => {
   const [isAnimation, setAnimation] = useState(false);
 
   const reverse = async (str: string) => {
+    if (str.length === 0) {
+      return "";
+    }
     setAnimation(true);
     const arr = str.split("").map((value: string) => constructElement(value));
     setElements(arr);
@@ -36,7 +39,7 @@ export const useAnimatedReverse = (animationDelay: number) => {
       right -= 1;
     }
     setAnimation(false);
-    return elements.map(({ value }) => value);
+    return arr.map(({ value }) => value).join("");
   };
 
   return {

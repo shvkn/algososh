@@ -35,6 +35,9 @@ export const useAnimatedSorting = (animationDelay: number) => {
     elementsArr: TElement[],
     direction: Direction = Direction.Ascending
   ): Promise<number[]> => {
+    if (elementsArr.length === 0) {
+      return [];
+    }
     const arr = [...elementsArr];
     const lastIndex = arr.length - 1;
     for (let i = 0; i <= lastIndex - 1; i++) {
@@ -69,6 +72,9 @@ export const useAnimatedSorting = (animationDelay: number) => {
     elementsArr: TElement[],
     direction: Direction = Direction.Ascending
   ): Promise<number[]> => {
+    if (elementsArr.length === 0) {
+      return [];
+    }
     const arr = [...elementsArr];
     let i = 0;
     let keepSorting = true;

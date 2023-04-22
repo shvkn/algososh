@@ -73,7 +73,7 @@ export const ListPage: React.FC = () => {
 
   return (
     <SolutionLayout title="Связный список">
-      <div className={styles.container}>
+      <div className={styles.container} data-testId="list-page">
         <form>
           <div className={styles.row}>
             <Controller

@@ -37,7 +37,7 @@ export const QueuePage: React.FC = () => {
 
   return (
     <SolutionLayout title="Очередь">
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.panel}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.panel} data-testId="queue-page">
         <div className={styles.row}>
           <Controller
             name={"value"}

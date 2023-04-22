@@ -28,7 +28,7 @@ export const StringComponent: React.FC = () => {
 
   return (
     <SolutionLayout title="Строка">
-      <div className={styles.container}>
+      <div className={styles.container} data-testId="string-page">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.row}>
             <Controller

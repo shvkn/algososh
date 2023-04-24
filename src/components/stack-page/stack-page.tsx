@@ -54,7 +54,7 @@ export const StackPage: React.FC = () => {
             text={"Добавить"}
             disabled={!isIdle || !isValid || !isDirty || elements.length >= 20}
             isLoader={currentAnimation === "Push"}
-            extraClass={"ml-6"}
+            extraClass={"ml-6 addButton"}
           />
 
           <Button
@@ -63,7 +63,7 @@ export const StackPage: React.FC = () => {
             onClick={() => pop()}
             disabled={!isIdle || elements.length === 0}
             isLoader={currentAnimation === "Pop"}
-            extraClass={"ml-6"}
+            extraClass={"ml-6 removeButton"}
           />
 
           <Button
@@ -71,11 +71,11 @@ export const StackPage: React.FC = () => {
             text={"Очистить"}
             disabled={!isIdle || elements.length === 0}
             onClick={() => reset()}
-            extraClass={"ml-40"}
+            extraClass={"ml-40 clearButton"}
           />
         </div>
       </form>
-      <div className={styles.stack}>
+      <div className={styles.stack} data-cy-id="elements">
         {elements.map(({ value, state, isTop }, idx) => {
           return (
             <Circle

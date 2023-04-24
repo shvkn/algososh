@@ -1,14 +1,14 @@
-import { SHORT_DELAY_IN_MS } from "../../../src/constants";
-import { ElementStates } from "../../../src/types";
+import { SHORT_DELAY_IN_MS } from "../../src/constants";
+import { ElementStates } from "../../src/types";
 
 type TFrameItem = {
-  value: string,
-  state: ElementStates,
-  index: number,
-  top: string,
-}
+  value: string;
+  state: ElementStates;
+  index: number;
+  top: string;
+};
 
-const testFrameAnimation = (frame: TFrameItem[]) => {
+const testFrame = (frame: TFrameItem[]) => {
   cy.get("[class^='circle_content']").each(($el, idx, arr) => {
     const circle = $el.find("[class^='circle_circle']")[0];
     const value = circle.textContent;
@@ -25,17 +25,16 @@ const testFrameAnimation = (frame: TFrameItem[]) => {
 };
 
 describe("Stack e2e tests", () => {
-
   beforeEach(() => {
     cy.visit("http://localhost:3000/stack");
     cy.get("[data-cy-id='elements']").as("elements");
-    cy.get("input").as("input")
+    cy.get("input").as("input");
     cy.get("button[class$='addButton']").as("addButton");
     cy.get("button[class$='removeButton']").as("removeButton");
     cy.get("button[class$='clearButton']").as("clearButton");
   });
 
-  it("should toggle addButton disability by input value", function () {
+  it("should disable buttons while empty input", function () {
     cy.get("@input").clear();
 
     cy.get("@input").should("have.value", "");
@@ -44,15 +43,13 @@ describe("Stack e2e tests", () => {
     cy.get("@clearButton").should("be.disabled");
   });
 
-
   it("should `push` correctly", function () {
-
     const mockFrames: TFrameItem[][] = [
       [{ value: "1", state: ElementStates.Changing, index: 0, top: "top" }],
       [{ value: "1", state: ElementStates.Default, index: 0, top: "top" }],
     ];
 
-    const mockFrames2 = [
+    const mockFrames2: TFrameItem[][] = [
       [
         { value: "1", state: ElementStates.Default, index: 0, top: "" },
         { value: "2", state: ElementStates.Changing, index: 1, top: "top" },
@@ -74,7 +71,7 @@ describe("Stack e2e tests", () => {
     cy.get("@elements").children().should("have.length", 1);
 
     mockFrames.forEach((frame) => {
-      testFrameAnimation(frame);
+      testFrame(frame);
       cy.wait(SHORT_DELAY_IN_MS);
     });
 
@@ -84,25 +81,22 @@ describe("Stack e2e tests", () => {
     cy.get("@elements").children().should("have.length", 2);
 
     mockFrames2.forEach((frame) => {
-      testFrameAnimation(frame);
+      testFrame(frame);
       cy.wait(SHORT_DELAY_IN_MS);
     });
-
   });
 
   it("should `pop` correctly", function () {
     const mockFrames = [
       [
         { value: "1", state: ElementStates.Default, index: 0, top: "" },
-        { value: "2", state: ElementStates.Default, index: 1, top: "top" }
+        { value: "2", state: ElementStates.Default, index: 1, top: "top" },
       ],
       [
         { value: "1", state: ElementStates.Default, index: 0, top: "" },
-        { value: "2", state: ElementStates.Changing, index: 1, top: "top" }
+        { value: "2", state: ElementStates.Changing, index: 1, top: "top" },
       ],
-      [
-        { value: "1", state: ElementStates.Default, index: 0, top: "top" },
-      ],
+      [{ value: "1", state: ElementStates.Default, index: 0, top: "top" }],
     ];
 
     cy.get("@input").type("1");
@@ -125,19 +119,19 @@ describe("Stack e2e tests", () => {
     cy.get("@elements").children().should("have.length", 1);
 
     mockFrames.forEach((frame) => {
-      testFrameAnimation(frame);
+      testFrame(frame);
       cy.wait(SHORT_DELAY_IN_MS);
     });
-
   });
 
-  it("should `clear` correctly", function() {
+  it("should `clear` correctly", function () {
     cy.get("@elements").children().should("have.length", 0);
 
     cy.get("@input").type("1");
     cy.get("@addButton").click();
     cy.wait(SHORT_DELAY_IN_MS);
     cy.wait(SHORT_DELAY_IN_MS);
+
     cy.get("@input").type("2");
     cy.get("@addButton").click();
     cy.wait(SHORT_DELAY_IN_MS);
@@ -149,5 +143,4 @@ describe("Stack e2e tests", () => {
 
     cy.get("@elements").children().should("have.length", 0);
   });
-
 });

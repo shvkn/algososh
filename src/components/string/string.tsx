@@ -28,7 +28,7 @@ export const StringComponent: React.FC = () => {
 
   return (
     <SolutionLayout title="Строка">
-      <div className={styles.container} data-testId="string-page">
+      <div className={styles.container} data-test-id="string-page">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.row}>
             <Controller
@@ -59,9 +59,7 @@ export const StringComponent: React.FC = () => {
         </form>
         <div
           className={`${styles.elements}`}
-          data-testId="elements"
-          data-animationFrame={frame}
-          data-isAnimation={isAnimation}
+          data-test-id="elements"
         >
           {elements.map((el, idx) => (
             <Circle key={idx} letter={el.value} state={el.state} extraClass={"ml-4 mr-4 circle"} />

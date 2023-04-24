@@ -1,5 +1,5 @@
-import { ElementStates } from "../../../src/types";
-import { SHORT_DELAY_IN_MS } from "../../../src/constants";
+import { ElementStates } from "../../src/types";
+import { SHORT_DELAY_IN_MS } from "../../src/constants";
 
 type TFrameItem = {
   value: string;
@@ -9,15 +9,15 @@ type TFrameItem = {
   tail?: string;
 };
 
-const testFrameAnimation = (frame: TFrameItem[]) => {
-  cy.get("[class^='circle_content']").each(($el, idx, arr) => {
+const testFrame = (frame: TFrameItem[]) => {
+  cy.get("[class^='circle_content']").each(($el, idx, { length }) => {
     const circle = $el.find("[class^='circle_circle']")[0];
     const value = circle.textContent;
     const index = Number($el.find("[class*='circle_index']")[0].textContent);
 
     if (idx === 0) {
       expect($el.find("[class*='circle_head']")[0].textContent).to.equal("head");
-    } else if (idx === arr.length - 1) {
+    } else if (idx === length - 1) {
       expect($el.find("[class*='circle_tail']")[0].textContent).to.equal("tail");
     } else {
       expect($el.find("[class*='circle_tail']")[0].textContent).to.equal("");
@@ -38,7 +38,7 @@ describe("Queue e2e tests", function () {
     cy.get(".cyElements").as("elements");
   });
 
-  it("should toggle addButton disability by input value", function () {
+  it("should disable buttons while empty input", function () {
     cy.get("@input").clear();
 
     cy.get("@input").should("have.value", "");
@@ -72,7 +72,7 @@ describe("Queue e2e tests", function () {
     cy.get("@elements").children().should("have.length", 1);
 
     mockFrames.forEach((frame) => {
-      testFrameAnimation(frame);
+      testFrame(frame);
       cy.wait(SHORT_DELAY_IN_MS);
     });
 
@@ -82,20 +82,18 @@ describe("Queue e2e tests", function () {
     cy.get("@elements").children().should("have.length", 2);
 
     mockFrames2.forEach((frame) => {
-      testFrameAnimation(frame);
+      testFrame(frame);
       cy.wait(SHORT_DELAY_IN_MS);
     });
   });
 
-  it("should `dequeue` correctly", function() {
+  it("should `dequeue` correctly", function () {
     const mockFrames = [
       [
         { value: "1", state: ElementStates.Changing, head: "head", tail: "", index: 0 },
         { value: "2", state: ElementStates.Default, head: "", tail: "tail", index: 1 },
       ],
-      [
-        { value: "2", state: ElementStates.Default, head: "head", tail: "tail", index: 0 },
-      ],
+      [{ value: "2", state: ElementStates.Default, head: "head", tail: "tail", index: 0 }],
     ];
 
     cy.get("@input").type("1");
@@ -112,13 +110,13 @@ describe("Queue e2e tests", function () {
 
     cy.get("@removeButton").click();
     mockFrames.forEach((frame) => {
-      testFrameAnimation(frame);
+      testFrame(frame);
       cy.wait(SHORT_DELAY_IN_MS);
     });
     cy.get("@elements").children().should("have.length", 1);
   });
 
-  it("should `clear` correctly", function() {
+  it("should `clear` correctly", function () {
     cy.get("@input").type("1");
     cy.get("@addButton").click();
     cy.wait(SHORT_DELAY_IN_MS);

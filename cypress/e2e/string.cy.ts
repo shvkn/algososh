@@ -1,25 +1,18 @@
-import { ElementStates } from "../../../src/types";
-import { DELAY_IN_MS } from "../../../src/constants";
+import { ElementStates } from "../../src/types";
+import { DELAY_IN_MS } from "../../src/constants";
 
-describe("string e2e tests", function () {
-  let input: Cypress.Chainable<JQuery<HTMLInputElement>>;
-  let button: Cypress.Chainable<JQuery<HTMLButtonElement>>;
+describe("String-page e2e tests", function () {
 
   beforeEach(() => {
     cy.visit("http://localhost:3000/recursion");
-    input = cy.get(".stringInput > input");
-    button = cy.get("button[type='submit']");
-    input && input.clear();
+    cy.get(".stringInput > input").as("input");
+    cy.get("button[type='submit']").as("button");
   });
 
-  it("should toggle button disability by input value", function () {
-    input.clear();
-    input.should("have.value", "");
-    button.should("be.disabled");
-    input.type("hello");
-    input.should("have.value", "hello");
-    button.not("be.disabled");
-    input.clear();
+  it("should disable buttons while empty input", function () {
+    cy.get("@input").clear();
+    cy.get("@input").should("have.value", "");
+    cy.get("@button").should("be.disabled");
   });
 
   it("should be correct animation", function () {
@@ -61,8 +54,8 @@ describe("string e2e tests", function () {
       ],
     ];
 
-    input.type("hello");
-    button.click();
+    cy.get("@input").type("hello");
+    cy.get("@button").click();
 
     for (const frame of mockFrames) {
       cy.get("[class^='circle_circle']").each(($el, index) => {

@@ -30,7 +30,7 @@ export const StackPage: React.FC = () => {
 
   return (
     <SolutionLayout title="Стек">
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.panel} data-testId="stack-page">
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.panel} data-test-id="stack-page">
         <div className={styles.row}>
           <Controller
             name={"value"}

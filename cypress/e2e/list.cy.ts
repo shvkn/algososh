@@ -1,5 +1,5 @@
-import { ElementStates } from "../../../src/types";
-import { SHORT_DELAY_IN_MS, TAIL } from "../../../src/constants";
+import { ElementStates } from "../../src/types";
+import { SHORT_DELAY_IN_MS, TAIL } from "../../src/constants";
 
 type TCircle = {
   value?: string;
@@ -23,7 +23,7 @@ describe("Linked list e2e tests", function () {
     cy.get(".cyElements").as("elements");
   });
 
-  it("should be disabled buttons while empty input", function () {
+  it("should disable buttons while empty input", function () {
     cy.get("@inputValue").clear();
     cy.get("@inputIndex").clear();
 

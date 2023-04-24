@@ -25,10 +25,10 @@ export const useFibonacci = (animationDelay: number) => {
     const numbers = getFibonacciNumbers(n + shift + 1);
     const arr: TElement[] = [];
     for(let i = shift; i < numbers.length; i += 1) {
-      await delay(animationDelay);
       const element = constructElement(numbers[i].toString());
       arr.push(element)
       setElements([...arr]);
+      await delay(animationDelay);
     }
     setAnimation(false);
     return elements.map(({ value }) => Number(value)).slice(shift);

@@ -48,6 +48,7 @@ export const FibonacciPage: React.FC = () => {
                   required={true}
                   disabled={isAnimation}
                   isLimitText={true}
+                  extraClass={"stringInput"}
                 />
               )}
             />

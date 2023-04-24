@@ -19,7 +19,7 @@ export const StringComponent: React.FC = () => {
     formState: { isValid, isDirty },
   } = useForm({ defaultValues });
 
-  const { elements, reverse, isAnimation, frame } = useAnimatedReverse(DELAY_IN_MS);
+  const { elements, reverse, isAnimation } = useAnimatedReverse(DELAY_IN_MS);
 
   const onSubmit = (data: TStringForm) => {
     resetForm();

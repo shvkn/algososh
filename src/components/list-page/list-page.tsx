@@ -89,42 +89,50 @@ export const ListPage: React.FC = () => {
                   value={value}
                   placeholder={"Введите значение"}
                   disabled={list.currentAnimation !== null}
-                  extraClass={styles.input}
+                  extraClass={`${styles.input} cyInputValue`}
                   isLimitText={true}
                 />
               )}
             />
-            <Button type={"button"}
-                    text={"Добавить в head"}
-                    onClick={insertAtHead}
-                    isLoader={list.currentAnimation === "InsertAtHead"}
-                    disabled={!isValid}
-                    linkedList={"small"}
-                    extraClass={"ml-6"} />
+            <Button
+              type={"button"}
+              text={"Добавить в head"}
+              onClick={insertAtHead}
+              isLoader={list.currentAnimation === "InsertAtHead"}
+              disabled={!isValid}
+              linkedList={"small"}
+              extraClass={"ml-6 cyPrependButton"}
+            />
 
-            <Button type={"button"}
-                    text={"Добавить в tail"}
-                    onClick={insertAtTail}
-                    isLoader={list.currentAnimation === "InsertAtTail"}
-                    disabled={!isValid}
-                    linkedList={"small"}
-                    extraClass={"ml-6"} />
+            <Button
+              type={"button"}
+              text={"Добавить в tail"}
+              onClick={insertAtTail}
+              isLoader={list.currentAnimation === "InsertAtTail"}
+              disabled={!isValid}
+              linkedList={"small"}
+              extraClass={"ml-6 cyAppendButton"}
+            />
 
-            <Button type={"button"}
-                    text={"Удалить из head"}
-                    onClick={removeFromHead}
-                    isLoader={list.currentAnimation === "RemoveFromHead"}
-                    disabled={list.isEmpty}
-                    linkedList={"small"}
-                    extraClass={"ml-6"} />
+            <Button
+              type={"button"}
+              text={"Удалить из head"}
+              onClick={removeFromHead}
+              isLoader={list.currentAnimation === "RemoveFromHead"}
+              disabled={list.isEmpty}
+              linkedList={"small"}
+              extraClass={"ml-6 cyShiftButton"}
+            />
 
-            <Button type={"button"}
-                    text={"Удалить из tail"}
-                    onClick={removeFromTail}
-                    isLoader={list.currentAnimation === "RemoveFromTail"}
-                    disabled={list.isEmpty}
-                    linkedList={"small"}
-                    extraClass={"ml-6"} />
+            <Button
+              type={"button"}
+              text={"Удалить из tail"}
+              onClick={removeFromTail}
+              isLoader={list.currentAnimation === "RemoveFromTail"}
+              disabled={list.isEmpty}
+              linkedList={"small"}
+              extraClass={"ml-6 cyPopButton"}
+            />
           </div>
           <div className={`mt-6 ${styles.row}`}>
             <Controller
@@ -141,53 +149,59 @@ export const ListPage: React.FC = () => {
                   value={value}
                   disabled={list.currentAnimation !== null || list.isEmpty}
                   placeholder={"Введите индекс"}
-                  extraClass={styles.input}
+                  extraClass={`${styles.input} cyInputIndex`}
                 />
               )}
             />
-            <Button type={"button"}
-                    text={"Добавить по индексу"}
-                    onClick={insertAt}
-                    isLoader={list.currentAnimation === "InsertAt"}
-                    disabled={!isValid || !isIndexInRange}
-                    linkedList={"big"}
-                    extraClass={"ml-6"} />
+            <Button
+              type={"button"}
+              text={"Добавить по индексу"}
+              onClick={insertAt}
+              isLoader={list.currentAnimation === "InsertAt"}
+              disabled={!isValid || !isIndexInRange}
+              linkedList={"big"}
+              extraClass={"ml-6 cyAddByIndexButton"}
+            />
 
-            <Button type={"button"}
-                    text={"Удалить по индексу"}
-                    onClick={removeAt}
-                    isLoader={list.currentAnimation === "RemoveAt"}
-                    disabled={!isIndexInRange || list.isEmpty}
-                    linkedList={"big"}
-                    extraClass={"ml-6"} />
+            <Button
+              type={"button"}
+              text={"Удалить по индексу"}
+              onClick={removeAt}
+              isLoader={list.currentAnimation === "RemoveAt"}
+              disabled={!isIndexInRange || list.isEmpty}
+              linkedList={"big"}
+              extraClass={"ml-6 cyDropByIndexButton"}
+            />
           </div>
         </form>
-        <div className={styles.list}>
+        <div className={`${styles.list} cyElements`}>
           {list.elements.map((element, idx, { length }) => {
-            const head = element.head
-              ? <Circle isSmall={true} state={element.head?.state} letter={element.head?.value} />
-              : idx === 0
-                ? HEAD
-                : null;
-            const tail = element.tail
-              ? <Circle isSmall={true} state={element.tail?.state} letter={element.tail?.value} />
-              : idx === length - 1
-                ? TAIL
-                : null;
+            const head = element.head ? (
+              <Circle isSmall={true} state={element.head?.state} letter={element.head?.value} />
+            ) : idx === 0 ? (
+              HEAD
+            ) : null;
+            const tail = element.tail ? (
+              <Circle isSmall={true} state={element.tail?.state} letter={element.tail?.value} />
+            ) : idx === length - 1 ? (
+              TAIL
+            ) : null;
 
             return (
               <div key={idx} className={styles.node}>
-                <Circle letter={element.value?.toString()}
-                        state={element.state}
-                        head={head}
-                        tail={tail}
-                        index={idx} />
+                <Circle
+                  letter={element.value?.toString()}
+                  state={element.state}
+                  head={head}
+                  tail={tail}
+                  index={idx}
+                  extraClass={"cyCircle"}
+                />
                 {idx < list.size - 1 && (
                   <div className={styles.arrow}>
                     <ArrowIcon
-                      fill={element.state === ElementStates.Changing
-                        ? "#d252e1"
-                        : "#0032ff"} />
+                      fill={element.state === ElementStates.Changing ? "#d252e1" : "#0032ff"}
+                    />
                   </div>
                 )}
               </div>

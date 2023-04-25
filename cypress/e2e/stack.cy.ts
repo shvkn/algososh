@@ -1,4 +1,4 @@
-import { SHORT_DELAY_IN_MS } from "../../src/constants";
+import { CY_SELECTORS, SHORT_DELAY_IN_MS } from "../../src/constants";
 import { ElementStates } from "../../src/types";
 
 type TFrameItem = {
@@ -9,15 +9,15 @@ type TFrameItem = {
 };
 
 const testFrame = (frame: TFrameItem[]) => {
-  cy.get("[class^='circle_content']").each(($el, idx, arr) => {
-    const circle = $el.find("[class^='circle_circle']")[0];
-    const value = circle.textContent;
-    const index = Number($el.find("[class*='circle_index']")[0].textContent);
+  cy.get(CY_SELECTORS.CIRCLE_CONTENT).each(($el, idx, arr) => {
+    const circle = $el.find(CY_SELECTORS.CIRCLE);
+    const value = circle.text();
+    const index = Number($el.find(CY_SELECTORS.CIRCLE_INDEX).text());
 
     if (idx === arr.length - 1) {
-      expect($el.find("[class*='circle_head']")[0].textContent).to.equal("top");
+      expect($el.find(CY_SELECTORS.CIRCLE_HEAD).text()).to.equal("top");
     } else {
-      expect($el.find("[class*='circle_head']")[0].textContent).to.equal("");
+      expect($el.find(CY_SELECTORS.CIRCLE_HEAD).text()).to.equal("");
     }
     expect(value).to.equal(frame[index].value);
     expect(circle).to.have.attr("class").contain(`circle_${frame[index].state}`);

@@ -1,5 +1,5 @@
 import { ElementStates } from "../../src/types";
-import { SHORT_DELAY_IN_MS } from "../../src/constants";
+import { CY_SELECTORS, HEAD, SHORT_DELAY_IN_MS, TAIL } from "../../src/constants";
 
 type TFrameItem = {
   value: string;
@@ -10,18 +10,18 @@ type TFrameItem = {
 };
 
 const testFrame = (frame: TFrameItem[]) => {
-  cy.get("[class^='circle_content']").each(($el, idx, { length }) => {
-    const circle = $el.find("[class^='circle_circle']")[0];
+  cy.get(CY_SELECTORS.CIRCLE_CONTENT).each(($el, idx, { length }) => {
+    const circle = $el.find(CY_SELECTORS.CIRCLE)[0];
     const value = circle.textContent;
-    const index = Number($el.find("[class*='circle_index']")[0].textContent);
+    const index = Number($el.find(CY_SELECTORS.CIRCLE_INDEX)[0].textContent);
 
     if (idx === 0) {
-      expect($el.find("[class*='circle_head']")[0].textContent).to.equal("head");
+      expect($el.find(CY_SELECTORS.CIRCLE_HEAD)[0].textContent).to.equal(HEAD);
     } else if (idx === length - 1) {
-      expect($el.find("[class*='circle_tail']")[0].textContent).to.equal("tail");
+      expect($el.find(CY_SELECTORS.CIRCLE_TAIL)[0].textContent).to.equal(TAIL);
     } else {
-      expect($el.find("[class*='circle_tail']")[0].textContent).to.equal("");
-      expect($el.find("[class*='circle_head']")[0].textContent).to.equal("");
+      expect($el.find(CY_SELECTORS.CIRCLE_TAIL)[0].textContent).to.equal("");
+      expect($el.find(CY_SELECTORS.CIRCLE_HEAD)[0].textContent).to.equal("");
     }
     expect(value).to.equal(frame[index].value);
     expect(circle).to.have.attr("class").contain(`circle_${frame[index].state}`);
@@ -49,18 +49,18 @@ describe("Queue e2e tests", function () {
 
   it("should `enqueue` correctly", function () {
     const mockFrames = [
-      [{ value: "1", state: ElementStates.Changing, head: "head", tail: "tail", index: 0 }],
-      [{ value: "1", state: ElementStates.Default, head: "head", tail: "tail", index: 0 }],
+      [{ value: "1", state: ElementStates.Changing, head: HEAD, tail: TAIL, index: 0 }],
+      [{ value: "1", state: ElementStates.Default, head: HEAD, tail: TAIL, index: 0 }],
     ];
 
     const mockFrames2 = [
       [
-        { value: "1", state: ElementStates.Default, head: "head", tail: "", index: 0 },
-        { value: "2", state: ElementStates.Changing, head: "", tail: "tail", index: 1 },
+        { value: "1", state: ElementStates.Default, head: HEAD, tail: "", index: 0 },
+        { value: "2", state: ElementStates.Changing, head: "", tail: TAIL, index: 1 },
       ],
       [
-        { value: "1", state: ElementStates.Default, head: "head", tail: "", index: 0 },
-        { value: "2", state: ElementStates.Default, head: "", tail: "tail", index: 1 },
+        { value: "1", state: ElementStates.Default, head: HEAD, tail: "", index: 0 },
+        { value: "2", state: ElementStates.Default, head: "", tail: TAIL, index: 1 },
       ],
     ];
 
@@ -90,10 +90,10 @@ describe("Queue e2e tests", function () {
   it("should `dequeue` correctly", function () {
     const mockFrames = [
       [
-        { value: "1", state: ElementStates.Changing, head: "head", tail: "", index: 0 },
-        { value: "2", state: ElementStates.Default, head: "", tail: "tail", index: 1 },
+        { value: "1", state: ElementStates.Changing, head: HEAD, tail: "", index: 0 },
+        { value: "2", state: ElementStates.Default, head: "", tail: TAIL, index: 1 },
       ],
-      [{ value: "2", state: ElementStates.Default, head: "head", tail: "tail", index: 0 }],
+      [{ value: "2", state: ElementStates.Default, head: HEAD, tail: TAIL, index: 0 }],
     ];
 
     cy.get("@input").type("1");

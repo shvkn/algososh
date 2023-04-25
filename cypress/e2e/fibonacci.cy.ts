@@ -1,5 +1,5 @@
 import { ElementStates } from "../../src/types";
-import { SHORT_DELAY_IN_MS } from "../../src/constants";
+import { CY_SELECTORS, SHORT_DELAY_IN_MS } from "../../src/constants";
 
 describe("fibonacci e2e tests", () => {
   beforeEach(() => {
@@ -53,10 +53,10 @@ describe("fibonacci e2e tests", () => {
     cy.get("@button").click();
 
     for (let frame of mockFrames) {
-      cy.get("[class^='circle_content']").each(($el) => {
-        const circle = $el.find("[class^='circle_circle']");
+      cy.get(CY_SELECTORS.CIRCLE_CONTENT).each(($el) => {
+        const circle = $el.find(CY_SELECTORS.CIRCLE);
         const value = circle.text();
-        const index = Number($el.find("[class*='circle_index']").text());
+        const index = Number($el.find(CY_SELECTORS.CIRCLE_INDEX).text());
         expect(value).to.equal(frame[index].value);
         expect(circle).to.have.attr("class").contain(`circle_${frame[index].state}`);
       });

@@ -1,5 +1,5 @@
 import { ElementStates } from "../../src/types";
-import { DELAY_IN_MS } from "../../src/constants";
+import { CY_SELECTORS, DELAY_IN_MS } from "../../src/constants";
 
 describe("String-page e2e tests", function () {
 
@@ -58,7 +58,7 @@ describe("String-page e2e tests", function () {
     cy.get("@button").click();
 
     for (const frame of mockFrames) {
-      cy.get("[class^='circle_circle']").each(($el, index) => {
+      cy.get(CY_SELECTORS.CIRCLE).each(($el, index) => {
         expect($el).to.have.attr("class").contain(`circle_${frame[index].state}`);
         expect($el).to.contain(frame[index].value);
       });

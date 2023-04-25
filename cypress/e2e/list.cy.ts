@@ -1,5 +1,5 @@
 import { ElementStates } from "../../src/types";
-import { SHORT_DELAY_IN_MS, TAIL } from "../../src/constants";
+import { CY_SELECTORS, HEAD, SHORT_DELAY_IN_MS, TAIL } from "../../src/constants";
 
 type TCircle = {
   value?: string;
@@ -39,15 +39,15 @@ describe("Linked list e2e tests", function () {
     cy.get("@elements")
       .children()
       .each(($el, idx, arr) => {
-        const circle = $el.find("[class^='circle_circle']")[0];
-        const index = $el.find("[class*='circle_index']")[0].textContent;
+        const circle = $el.find(CY_SELECTORS.CIRCLE);
+        const index = $el.find(CY_SELECTORS.CIRCLE_INDEX).text();
         if (idx === 0) {
-          expect($el.find("[class*='circle_head']")[0].textContent).to.equal("head");
+          expect($el.find(CY_SELECTORS.CIRCLE_HEAD).text()).to.equal(HEAD);
         } else if (idx === arr.length - 1) {
-          expect($el.find("[class*='circle_tail']")[0].textContent).to.equal("tail");
+          expect($el.find(CY_SELECTORS.CIRCLE_TAIL).text()).to.equal(TAIL);
         } else {
-          expect($el.find("[class*='circle_tail']")[0].textContent).to.equal("");
-          expect($el.find("[class*='circle_head']")[0].textContent).to.equal("");
+          expect($el.find(CY_SELECTORS.CIRCLE_TAIL).text()).to.equal("");
+          expect($el.find(CY_SELECTORS.CIRCLE_HEAD).text()).to.equal("");
         }
         expect(index).to.equal(`${idx}`);
         expect(circle).to.have.attr("class").contain(`circle_${ElementStates.Default}`);
@@ -61,7 +61,7 @@ describe("Linked list e2e tests", function () {
       .children()
       .first()
       .then(($el) => {
-        const head = $el.find("[class*='circle_head']").find("[class^=circle_circle]");
+        const head = $el.find(CY_SELECTORS.CIRCLE_HEAD).find(CY_SELECTORS.CIRCLE);
 
         expect(head).to.have.attr("class").contain(`circle_${ElementStates.Changing}`);
         expect(head.text()).to.equal("1");
@@ -72,8 +72,8 @@ describe("Linked list e2e tests", function () {
       .children()
       .first()
       .then(($el) => {
-        const circle = $el.find("[class^=circle_circle]");
-        const head = $el.find("[class*='circle_head']");
+        const circle = $el.find(CY_SELECTORS.CIRCLE);
+        const head = $el.find(CY_SELECTORS.CIRCLE_HEAD);
 
         expect(circle).to.have.attr("class").contain(`circle_${ElementStates.Modified}`);
         expect(circle.text()).to.equal("1");
@@ -85,7 +85,7 @@ describe("Linked list e2e tests", function () {
       .children()
       .first()
       .then(($el) => {
-        const circle = $el.find("[class^=circle_circle]");
+        const circle = $el.find(CY_SELECTORS.CIRCLE);
 
         expect(circle).to.have.attr("class").contain(`circle_${ElementStates.Default}`);
       });
@@ -98,7 +98,7 @@ describe("Linked list e2e tests", function () {
       .children()
       .last()
       .then(($el) => {
-        const head = $el.find("[class*='circle_head']").find("[class^=circle_circle]");
+        const head = $el.find(CY_SELECTORS.CIRCLE_HEAD).find(CY_SELECTORS.CIRCLE);
 
         expect(head).to.have.attr("class").contain(`circle_${ElementStates.Changing}`);
         expect(head.text()).to.equal("1");
@@ -109,8 +109,8 @@ describe("Linked list e2e tests", function () {
       .children()
       .last()
       .then(($el) => {
-        const circle = $el.find("[class^=circle_circle]");
-        const tail = $el.find("[class*='circle_tail']");
+        const circle = $el.find(CY_SELECTORS.CIRCLE);
+        const tail = $el.find(CY_SELECTORS.CIRCLE_TAIL);
 
         expect(circle).to.have.attr("class").contain(`circle_${ElementStates.Modified}`);
         expect(circle.text()).to.equal("1");
@@ -122,7 +122,7 @@ describe("Linked list e2e tests", function () {
       .children()
       .last()
       .then(($el) => {
-        const circle = $el.find("[class^=circle_circle]");
+        const circle = $el.find(CY_SELECTORS.CIRCLE);
 
         expect(circle).to.have.attr("class").contain(`circle_${ElementStates.Default}`);
       });
@@ -140,12 +140,12 @@ describe("Linked list e2e tests", function () {
         .children()
         .eq(i)
         .then(($el) => {
-          const head = $el.find("[class*='circle_head']").find("[class^=circle_circle]");
+          const head = $el.find(CY_SELECTORS.CIRCLE_HEAD).find(CY_SELECTORS.CIRCLE);
 
           expect(head).to.have.attr("class").contain(`circle_${ElementStates.Changing}`);
           expect(head.text()).to.equal("1");
           if (i < index) {
-            const circle = $el.find("[class^=circle_circle]");
+            const circle = $el.find(CY_SELECTORS.CIRCLE);
 
             expect(circle).to.have.attr("class").contain(`circle_${ElementStates.Changing}`);
           }
@@ -157,14 +157,14 @@ describe("Linked list e2e tests", function () {
       .children()
       .eq(index)
       .then(($el) => {
-        const circle = $el.find("[class^=circle_circle]");
+        const circle = $el.find(CY_SELECTORS.CIRCLE);
         expect(circle).to.have.attr("class").contain(`circle_${ElementStates.Modified}`);
       });
     cy.wait(SHORT_DELAY_IN_MS);
     cy.get("@elements")
       .children()
       .each(($el) => {
-        const circle = $el.find("[class^=circle_circle]");
+        const circle = $el.find(CY_SELECTORS.CIRCLE);
 
         expect(circle).to.have.attr("class").contain(`circle_${ElementStates.Default}`);
       });
@@ -184,7 +184,7 @@ describe("Linked list e2e tests", function () {
       .children()
       .first()
       .then(($el) => {
-        const circle = $el.find("[class^=circle_circle]");
+        const circle = $el.find(CY_SELECTORS.CIRCLE);
         circleValue = circle.text();
       });
 
@@ -194,8 +194,8 @@ describe("Linked list e2e tests", function () {
       .children()
       .first()
       .then(($el) => {
-        const circle = $el.find("[class^=circle_circle]");
-        const tail = $el.find("[class*='circle_tail']").find("[class^=circle_circle]");
+        const circle = $el.find(CY_SELECTORS.CIRCLE);
+        const tail = $el.find(CY_SELECTORS.CIRCLE_TAIL).find(CY_SELECTORS.CIRCLE);
 
         expect(circle).to.have.attr("class").contain(`circle_${ElementStates.Default}`);
         expect(tail).to.have.attr("class").contain(`circle_${ElementStates.Changing}`);
@@ -209,7 +209,7 @@ describe("Linked list e2e tests", function () {
       .children()
       .first()
       .then(($el) => {
-        const tail = $el.find("[class*='circle_tail']");
+        const tail = $el.find(CY_SELECTORS.CIRCLE_TAIL);
 
         expect(tail.text()).to.equal("");
       });
@@ -223,7 +223,7 @@ describe("Linked list e2e tests", function () {
       .children()
       .then(($el) => {
         elementsLength = $el.length;
-        const lastCircle = $el.last().find("[class^=circle_circle]");
+        const lastCircle = $el.last().find(CY_SELECTORS.CIRCLE);
         circleValue = lastCircle.text();
       });
 
@@ -233,8 +233,8 @@ describe("Linked list e2e tests", function () {
       .children()
       .last()
       .then(($el) => {
-        const circle = $el.find("[class^=circle_circle]");
-        const tail = $el.find("[class*='circle_tail']").find("[class^=circle_circle]");
+        const circle = $el.find(CY_SELECTORS.CIRCLE);
+        const tail = $el.find(CY_SELECTORS.CIRCLE_TAIL).find(CY_SELECTORS.CIRCLE);
 
         expect(circle).to.have.attr("class").contain(`circle_${ElementStates.Default}`);
         expect(tail).to.have.attr("class").contain(`circle_${ElementStates.Changing}`);
@@ -247,7 +247,7 @@ describe("Linked list e2e tests", function () {
       .children()
       .last()
       .then(($el) => {
-        const tail = $el.find("[class*='circle_tail']");
+        const tail = $el.find(CY_SELECTORS.CIRCLE_TAIL);
 
         expect(tail.text()).to.equal(TAIL);
       });
@@ -273,11 +273,11 @@ describe("Linked list e2e tests", function () {
         .children()
         .eq(i)
         .then(($el) => {
-          const circle = $el.find("[class^=circle_circle]");
+          const circle = $el.find(CY_SELECTORS.CIRCLE);
           if (i < index) {
             expect(circle).to.have.attr("class").contain(`circle_${ElementStates.Changing}`);
           } else {
-            const tail = $el.find("[class*='circle_tail']").find("[class^=circle_circle]");
+            const tail = $el.find(CY_SELECTORS.CIRCLE_TAIL).find(CY_SELECTORS.CIRCLE);
 
             expect(tail).to.have.attr("class").contain(`circle_${ElementStates.Changing}`);
             expect(tail.text()).to.equal(circleValue);

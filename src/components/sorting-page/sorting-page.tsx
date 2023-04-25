@@ -34,7 +34,7 @@ export const SortingPage: React.FC = () => {
 
   return (
     <SolutionLayout title="Сортировка массива">
-      <form className={styles.panel} onSubmit={handleSubmit}>
+      <form className={styles.panel} onSubmit={handleSubmit} data-test-id={"sorting-page"}>
         <fieldset className={styles.group}>
           <RadioInput label={"Выбор"}
                       checked={algorithm === SortingAlgorithm.SelectionSort}

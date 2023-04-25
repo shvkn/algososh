@@ -17,7 +17,7 @@ export const StackPage: React.FC = () => {
     control,
     handleSubmit,
     reset: resetForm,
-    formState: { isValid, isDirty }
+    formState: { isValid, isDirty },
   } = useForm({ defaultValues });
 
   const onSubmit = (data: TForm) => {
@@ -30,7 +30,7 @@ export const StackPage: React.FC = () => {
 
   return (
     <SolutionLayout title="Стек">
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.panel}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.panel} data-test-id="stack-page">
         <div className={styles.row}>
           <Controller
             name={"value"}
@@ -45,37 +45,48 @@ export const StackPage: React.FC = () => {
                 required={true}
                 extraClass={styles.input}
                 maxLength={4}
-                isLimitText={true} />
+                isLimitText={true}
+              />
             )}
           />
-          <Button type={"submit"}
-                  text={"Добавить"}
-                  disabled={!isIdle || !isValid || !isDirty || elements.length >= 20}
-                  isLoader={currentAnimation === "Push"}
-                  extraClass={"ml-6"} />
+          <Button
+            type={"submit"}
+            text={"Добавить"}
+            disabled={!isIdle || !isValid || !isDirty || elements.length >= 20}
+            isLoader={currentAnimation === "Push"}
+            extraClass={"ml-6 addButton"}
+          />
 
-          <Button type={"button"}
-                  text={"Удалить"}
-                  onClick={() => pop()}
-                  disabled={!isIdle || elements.length === 0}
-                  isLoader={currentAnimation === "Pop"}
-                  extraClass={"ml-6"} />
+          <Button
+            type={"button"}
+            text={"Удалить"}
+            onClick={() => pop()}
+            disabled={!isIdle || elements.length === 0}
+            isLoader={currentAnimation === "Pop"}
+            extraClass={"ml-6 removeButton"}
+          />
 
-          <Button type={"button"}
-                  text={"Очистить"}
-                  disabled={!isIdle || elements.length === 0}
-                  onClick={() => reset()}
-                  extraClass={"ml-40"} />
+          <Button
+            type={"button"}
+            text={"Очистить"}
+            disabled={!isIdle || elements.length === 0}
+            onClick={() => reset()}
+            extraClass={"ml-40 clearButton"}
+          />
         </div>
       </form>
-      <div className={styles.stack}>
+      <div className={styles.stack} data-cy-id="elements">
         {elements.map(({ value, state, isTop }, idx) => {
-          return <Circle key={idx}
-                         letter={value.toString()}
-                         index={idx}
-                         head={isTop ? "top" : ""}
-                         state={state}
-                         extraClass={"ml-8 mr-8 mb-40"} />;
+          return (
+            <Circle
+              key={idx}
+              letter={value.toString()}
+              index={idx}
+              head={isTop ? "top" : ""}
+              state={state}
+              extraClass={"ml-8 mr-8 mb-40"}
+            />
+          );
         })}
       </div>
     </SolutionLayout>

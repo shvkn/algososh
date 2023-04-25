@@ -37,7 +37,7 @@ export const QueuePage: React.FC = () => {
 
   return (
     <SolutionLayout title="Очередь">
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.panel}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.panel} data-test-id="queue-page">
         <div className={styles.row}>
           <Controller
             name={"value"}
@@ -53,40 +53,50 @@ export const QueuePage: React.FC = () => {
                 isLimitText={true}
                 value={value}
                 required={true}
-                extraClass={styles.input}
+                extraClass={`${styles.input}`}
                 disabled={!isIdle}
               />
             )}
           />
-          <Button type={"submit"}
-                  text={"Добавить"}
-                  disabled={!isIdle || !isValid || !isDirty || elements?.length >= 20}
-                  isLoader={currentAnimation === "Enqueue"}
-                  extraClass={"ml-6"} />
+          <Button
+            type={"submit"}
+            text={"Добавить"}
+            disabled={!isIdle || !isValid || !isDirty || elements?.length >= 20}
+            isLoader={currentAnimation === "Enqueue"}
+            extraClass={"ml-6 cyAddButton"}
+          />
 
-          <Button type={"button"}
-                  text={"Удалить"}
-                  onClick={() => dequeue()}
-                  disabled={!isIdle || elements?.length === 0}
-                  isLoader={currentAnimation === "Dequeue"}
-                  extraClass={"ml-6"} />
+          <Button
+            type={"button"}
+            text={"Удалить"}
+            onClick={() => dequeue()}
+            disabled={!isIdle || elements?.length === 0}
+            isLoader={currentAnimation === "Dequeue"}
+            extraClass={"ml-6 cyRemoveButton"}
+          />
 
-          <Button type={"button"}
-                  text={"Очистить"}
-                  disabled={!isIdle || elements?.length === 0}
-                  onClick={() => reset()}
-                  extraClass={"ml-40"} />
+          <Button
+            type={"button"}
+            text={"Очистить"}
+            disabled={!isIdle || elements?.length === 0}
+            onClick={() => reset()}
+            extraClass={"ml-40 cyClearButton"}
+          />
         </div>
       </form>
-      <div className={styles.queue}>
+      <div className={`${styles.queue} cyElements`}>
         {elements.map(({ value, state }, idx, { length }) => {
-          return <Circle key={idx}
-                         letter={value.toString()}
-                         index={idx}
-                         head={idx === 0 ? HEAD : ""}
-                         tail={idx === length - 1 ? TAIL : ""}
-                         state={state}
-                         extraClass={"ml-8 mr-8 mb-40"} />;
+          return (
+            <Circle
+              key={idx}
+              letter={value.toString()}
+              index={idx}
+              head={idx === 0 ? HEAD : ""}
+              tail={idx === length - 1 ? TAIL : ""}
+              state={state}
+              extraClass={"ml-8 mr-8 mb-40"}
+            />
+          );
         })}
       </div>
     </SolutionLayout>

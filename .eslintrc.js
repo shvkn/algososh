@@ -7,12 +7,14 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "prettier",
+    "plugin:cypress/recommended"
   ],
   "plugins": [
     "react-hooks",
     "@typescript-eslint",
-    "prettier"
+    "prettier",
+    "cypress"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",

@@ -29,7 +29,7 @@ export const FibonacciPage: React.FC = () => {
 
   return (
     <SolutionLayout title="Последовательность Фибоначчи">
-      <div className={styles.container}>
+      <div className={styles.container} data-test-id="fibonacci-page">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.row}>
             <Controller
@@ -48,6 +48,7 @@ export const FibonacciPage: React.FC = () => {
                   required={true}
                   disabled={isAnimation}
                   isLimitText={true}
+                  extraClass={"stringInput"}
                 />
               )}
             />

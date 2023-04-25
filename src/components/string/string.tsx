@@ -16,7 +16,7 @@ export const StringComponent: React.FC = () => {
     control,
     handleSubmit,
     reset: resetForm,
-    formState: { isValid, isDirty }
+    formState: { isValid, isDirty },
   } = useForm({ defaultValues });
 
   const { elements, reverse, isAnimation } = useAnimatedReverse(DELAY_IN_MS);
@@ -28,7 +28,7 @@ export const StringComponent: React.FC = () => {
 
   return (
     <SolutionLayout title="Строка">
-      <div className={styles.container}>
+      <div className={styles.container} data-test-id="string-page">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className={styles.row}>
             <Controller
@@ -44,6 +44,7 @@ export const StringComponent: React.FC = () => {
                   required={true}
                   disabled={isAnimation}
                   isLimitText={true}
+                  extraClass={"stringInput"}
                 />
               )}
             />
@@ -56,9 +57,12 @@ export const StringComponent: React.FC = () => {
             />
           </div>
         </form>
-        <div className={`${styles.elements}`}>
+        <div
+          className={`${styles.elements}`}
+          data-test-id="elements"
+        >
           {elements.map((el, idx) => (
-            <Circle key={idx} letter={el.value} state={el.state} extraClass={"ml-4 mr-4"} />
+            <Circle key={idx} letter={el.value} state={el.state} extraClass={"ml-4 mr-4 circle"} />
           ))}
         </div>
       </div>

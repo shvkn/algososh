@@ -1,5 +1,5 @@
 import { ElementStates } from "../../src/types";
-import { CY_SELECTORS, HEAD, SHORT_DELAY_IN_MS, TAIL } from "../../src/constants";
+import { CY_SELECTORS, HEAD, PAGES_URLS, SHORT_DELAY_IN_MS, TAIL } from "../../src/constants";
 
 type TCircle = {
   value?: string;
@@ -11,7 +11,7 @@ type TCircle = {
 
 describe("Linked list e2e tests", function () {
   beforeEach(() => {
-    cy.visit("http://localhost:3000/list");
+    cy.visit(PAGES_URLS.LIST);
     cy.get("[class$='cyInputValue'] > input").as("inputValue");
     cy.get("[class$='cyInputIndex'] > input").as("inputIndex");
     cy.get("button[class$='cyPrependButton']").as("prependButton");

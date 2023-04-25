@@ -1,4 +1,4 @@
-import { CY_SELECTORS, SHORT_DELAY_IN_MS } from "../../src/constants";
+import { CY_SELECTORS, PAGES_URLS, SHORT_DELAY_IN_MS } from "../../src/constants";
 import { ElementStates } from "../../src/types";
 
 type TFrameItem = {
@@ -26,7 +26,7 @@ const testFrame = (frame: TFrameItem[]) => {
 
 describe("Stack e2e tests", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000/stack");
+    cy.visit(PAGES_URLS.STACK);
     cy.get("[data-cy-id='elements']").as("elements");
     cy.get("input").as("input");
     cy.get("button[class$='addButton']").as("addButton");

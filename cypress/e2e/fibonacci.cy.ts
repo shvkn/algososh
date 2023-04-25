@@ -1,9 +1,9 @@
 import { ElementStates } from "../../src/types";
-import { CY_SELECTORS, SHORT_DELAY_IN_MS } from "../../src/constants";
+import { CY_SELECTORS, PAGES_URLS, SHORT_DELAY_IN_MS } from "../../src/constants";
 
 describe("fibonacci e2e tests", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000/fibonacci");
+    cy.visit(PAGES_URLS.FIBONACCI);
     cy.get("input").as("input");
     cy.get("button[type='submit']").as("button");
   });

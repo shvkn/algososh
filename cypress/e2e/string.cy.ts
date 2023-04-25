@@ -1,10 +1,10 @@
 import { ElementStates } from "../../src/types";
-import { CY_SELECTORS, DELAY_IN_MS } from "../../src/constants";
+import { CY_SELECTORS, DELAY_IN_MS, PAGES_URLS } from "../../src/constants";
 
 describe("String-page e2e tests", function () {
 
   beforeEach(() => {
-    cy.visit("http://localhost:3000/recursion");
+    cy.visit(PAGES_URLS.STRING);
     cy.get(".stringInput > input").as("input");
     cy.get("button[type='submit']").as("button");
   });

@@ -1,5 +1,5 @@
 import { ElementStates } from "../../src/types";
-import { CY_SELECTORS, HEAD, SHORT_DELAY_IN_MS, TAIL } from "../../src/constants";
+import { CY_SELECTORS, HEAD, PAGES_URLS, SHORT_DELAY_IN_MS, TAIL } from "../../src/constants";
 
 type TFrameItem = {
   value: string;
@@ -30,7 +30,7 @@ const testFrame = (frame: TFrameItem[]) => {
 
 describe("Queue e2e tests", function () {
   beforeEach(() => {
-    cy.visit("http://localhost:3000/queue");
+    cy.visit(PAGES_URLS.QUEUE);
     cy.get("input").as("input");
     cy.get("button[class$='cyAddButton']").as("addButton");
     cy.get("button[class$='cyRemoveButton']").as("removeButton");
